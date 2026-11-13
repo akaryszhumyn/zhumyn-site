@@ -25,6 +25,7 @@
   --color-focus: var(--color-accent);
   /* Сегментные переключатели: серая подложка и активный сегмент */
   --color-track: light-dark(rgb(10 10 10 / 0.06), rgb(245 245 245 / 0.08));
+  --color-panel: light-dark(#0a0a0a, #161616);
   --color-pill: light-dark(#ffffff, rgb(245 245 245 / 0.16));
 
   /* Шрифты */
@@ -59,9 +60,15 @@
   --gutter: clamp(1.25rem, 0.5rem + 3vw, 3rem);
 
   /* Радиусы */
-  --radius-sm: 14px;
-  --radius-md: 22px;
-  --radius-lg: 32px;
+  /* Правило: объекты одного вида и размера всегда берут один и тот же токен.
+     tag      метки, чипы (высота до ~32px)
+     control  кнопки, переключатели, выбор языка, кнопка меню, мелкие плитки (высота 40–120px)
+     card     карточки, строки услуг, обложки, фото, контактный блок, выезжающее меню (крупные)
+     Вложенный объект: радиус внешнего минус отступ между ними, тогда углы идут «параллельно»:
+     calc(var(--radius-card) - var(--space-3)) */
+  --radius-tag: 12px;
+  --radius-control: 24px;
+  --radius-card: 40px;
 
   /* Тени */
   --shadow-sm: 0 1px 2px light-dark(rgb(10 10 10 / 0.06), rgb(0 0 0 / 0.4));
@@ -111,7 +118,7 @@ body {
 h1, h2, h3 { line-height: var(--leading-tight); font-weight: var(--weight-medium); letter-spacing: -0.03em; margin: 0; }
 p { margin: 0; }
 img { max-width: 100%; height: auto; display: block; }
-:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; border-radius: var(--radius-sm); }
+:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; border-radius: var(--radius-tag); }
 .skip-link { position: absolute; left: -9999px; }
 .skip-link:focus { left: var(--space-4); top: var(--space-4); z-index: 10; background: var(--color-bg); padding: var(--space-2) var(--space-3); }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

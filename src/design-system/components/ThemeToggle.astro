@@ -16,11 +16,11 @@ const s = t(Astro.props.lang);
 <style>
   .theme {
     --seg: 2.25rem; position: relative; display: inline-flex; padding: 4px;
-    background: var(--color-track); border-radius: var(--radius-md);
+    background: var(--color-track); border-radius: var(--radius-control);
   }
   .theme__pill {
     position: absolute; top: 4px; left: 4px; width: var(--seg); height: var(--seg);
-    background: var(--color-pill); border-radius: var(--radius-sm); box-shadow: var(--shadow-sm);
+    background: var(--color-pill); border-radius: calc(var(--radius-control) - 4px); box-shadow: var(--shadow-sm);
     transition: transform var(--duration-slow) var(--ease-out);
   }
   /* Состояние берётся из <html data-theme>, оно выставляется до первой отрисовки, поэтому пилюля не «подъезжает» при загрузке */

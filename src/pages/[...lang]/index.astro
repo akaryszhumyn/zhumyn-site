@@ -7,11 +7,16 @@ import { HUB, langPaths, localize, t, type Lang } from '../../i18n';
 import { works } from '../../data/works';
 import { contacts } from '../../site';
 import avatar from '../../assets/avatar.jpg';
+import webIcon from '../../assets/services/web.svg';
+import brandIcon from '../../assets/services/brand.svg';
+import productIcon from '../../assets/services/product.svg';
+import digitalIcon from '../../assets/services/digital.svg';
 
 export const getStaticPaths = langPaths;
 const { lang } = Astro.props as { lang: Lang };
 const h = t(lang).hub;
 
+const serviceIcons = [webIcon, brandIcon, productIcon, digitalIcon];
 const home = localize(lang, '/', HUB);
 const nav = [
   { href: `${home}#works`, label: h.nav.works },
@@ -40,26 +45,36 @@ const logos = Object.entries(import.meta.glob<{ default: ImageMetadata }>('../..
     </Grid>
   </Section>
 
-  <Section id="services" title={h.services.title}>
-    <p class="count">{h.services.lead}</p>
-    <Grid min="20rem">
-      {h.services.items.map((s, i) => (
-        <Card>
-          <div class="service">
-            <h3>{s.title}</h3>
-            <p>{s.text}</p>
-            <div class="tags">{s.tags.map((tag) => <Tag>{tag}</Tag>)}</div>
-            {i === 2 && <Link href={localize(lang)}>{h.services.productLink} →</Link>}
-          </div>
-        </Card>
-      ))}
-    </Grid>
+  <Section id="services">
+    <div class="panel">
+      <header class="panel__head">
+        <h2>{h.services.title}</h2>
+        <p>{h.services.lead}</p>
+      </header>
+      <ul class="svc-list">
+        {h.services.items.map((s, i) => (
+          <li class="svc">
+            <div class="svc__icon"><img src={serviceIcons[i].src} alt="" width="326" height="100" loading="lazy" /></div>
+            <div class="svc__text">
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+              {i === 2 && <Link href={localize(lang)}>{h.services.productLink} →</Link>}
+            </div>
+            <ul class="svc__tags">{s.tags.map((tag) => <li>{tag}</li>)}</ul>
+          </li>
+        ))}
+      </ul>
+    </div>
   </Section>
 
   <Section title={h.clients.title}>
-    <ul class="clients">
-      {logos.map((l) => <li><span class="logo" role="img" aria-label={l.name} style={`--logo: url(${encodeURI(l.src)})`}></span></li>)}
-    </ul>
+    <div class="marquee" role="group" aria-label={h.clients.title}>
+      <ul class="marquee__track">
+        {logos.map((l) => <li><span class="logo" role="img" aria-label={l.name} style={`--logo: url(${encodeURI(l.src)})`}></span></li>)}
+        {/* Второй набор нужен для бесшовной петли; скринридеры его пропускают */}
+        {logos.map((l) => <li aria-hidden="true"><span class="logo" style={`--logo: url(${encodeURI(l.src)})`}></span></li>)}
+      </ul>
+    </div>
   </Section>
 
   <Section id="about" title={h.about.title}>
@@ -79,16 +94,55 @@ const logos = Object.entries(import.meta.glob<{ default: ImageMetadata }>('../..
 </Base>
 <style>
   .count { color: var(--color-text-muted); margin-top: calc(var(--space-5) * -1); margin-bottom: var(--space-6); }
-  .service { display: grid; gap: var(--space-3); align-content: start; height: 100%; }
-  .service h3 { font-size: var(--text-lg); }
-  .service p { color: var(--color-text-muted); }
-  .tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-2); }
-  .clients { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr)); }
-  .clients li { display: grid; place-items: center; aspect-ratio: 3 / 2; padding: var(--space-5); background: var(--color-surface); border-radius: var(--radius-md); }
+  .panel__head { text-align: center; margin-bottom: var(--space-7); }
+  .panel__head h2 { font-size: var(--text-xl); }
+  .panel__head p { margin-top: var(--space-3); color: var(--color-text-muted); }
+  .svc-list { list-style: none; margin: 0 auto; padding: 0; display: grid; gap: var(--space-3); max-width: 64rem; }
+  .svc {
+    display: grid; align-items: stretch; gap: var(--space-4) var(--space-5); padding: var(--space-3);
+    grid-template-columns: 12rem 1fr minmax(10rem, 17rem);
+    /* Строки тёмные в обеих темах: иконки нарисованы под тёмный фон */
+    background: var(--color-panel); color: #f5f5f5; border-radius: var(--radius-card);
+  }
+  /* Воздух сверху и снизу обложки с иконкой */
+  .svc__icon { display: grid; place-items: center; padding: var(--space-6) var(--space-3); background: rgb(255 255 255 / 0.05); border-radius: calc(var(--radius-card) - var(--space-3)); }
+  .svc__icon img { width: 100%; max-width: 22rem; height: auto; }
+  .svc__text { display: grid; gap: var(--space-2); align-content: center; padding-inline: var(--space-5); }
+  .svc__text h3 { font-size: var(--text-lg); font-weight: var(--weight-medium); }
+  .svc__text p { color: rgb(245 245 245 / 0.6); font-size: var(--text-sm); }
+  .svc__text :global(a) { color: #8fb0ff; font-size: var(--text-sm); }
+  .svc__tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-content: center; justify-content: flex-end; gap: var(--space-2); padding-right: var(--space-5); }
+  .svc__tags li { padding: var(--space-1) var(--space-3); border-radius: var(--radius-tag); background: rgb(255 255 255 / 0.07); color: rgb(245 245 245 / 0.7); font-size: var(--text-xs); }
+  @media (max-width: 48rem) {
+    .svc { grid-template-columns: 1fr; }
+    .svc__text, .svc__tags { padding-inline: var(--space-3); }
+    .svc__tags { justify-content: flex-start; }
+  }
+  /* Бегущая строка: два одинаковых набора, лента сдвигается ровно на один набор (−50%) и прыгает в начало незаметно */
+  .marquee {
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  .marquee__track {
+    display: flex; width: max-content; margin: 0; padding: 0; list-style: none;
+    animation: marquee 80s linear infinite;
+  }
+  .marquee:hover .marquee__track { animation-play-state: paused; }
+  .marquee__track li {
+    flex: none; width: 9.5rem; margin-right: var(--space-3); aspect-ratio: 3 / 2;
+    display: grid; place-items: center; padding: var(--space-5);
+    background: var(--color-surface); border-radius: var(--radius-control);
+  }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee__track { animation: none; }
+    .marquee { overflow-x: auto; mask-image: none; }
+    .marquee__track li[aria-hidden] { display: none; }
+  }
   /* Логотипы белые на прозрачном: рисуем их маской, поэтому они берут цвет текста и читаются в обеих темах */
   .logo { width: 100%; height: 2.75rem; background: var(--color-text); opacity: 0.7; mask: var(--logo) center / contain no-repeat; }
   .about { display: flex; align-items: center; gap: var(--space-6); flex-wrap: wrap; }
-  :global(.about__photo) { width: 10rem; height: 10rem; object-fit: cover; border-radius: var(--radius-lg); }
+  :global(.about__photo) { width: 10rem; height: 10rem; object-fit: cover; border-radius: var(--radius-card); }
   .about__greeting { font-size: var(--text-xl); font-weight: var(--weight-medium); letter-spacing: -0.03em; line-height: var(--leading-tight); }
   .about__years { color: var(--color-text-muted); margin-top: var(--space-2); }
   .hint { color: var(--color-text-muted); max-width: 40rem; margin-top: var(--space-5); }

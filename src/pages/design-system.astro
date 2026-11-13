@@ -12,7 +12,7 @@ const [sample] = await getCases(lang);
 const colors = ['bg', 'surface', 'text', 'text-muted', 'border', 'accent', 'accent-contrast'];
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl', '2xl'];
 const spaces = [1, 2, 3, 4, 5, 6, 7, 8];
-const radii = ['sm', 'md', 'lg'];
+
 ---
 <!doctype html>
 <html lang="ru">
@@ -40,14 +40,23 @@ const radii = ['sm', 'md', 'lg'];
       </div>
     </Section>
 
-    <Section title="Отступы, радиусы, тени">
+    <Section title="Отступы, тени">
       <div class="stack">
         {spaces.map((n) => <div class="row"><code>--space-{n}</code><span class="bar" style={`width: var(--space-${n})`} /></div>)}
       </div>
       <Grid min="9rem" gap="var(--space-3)">
-        {radii.map((r) => <div class="box" style={`border-radius: var(--radius-${r})`}><code>--radius-{r}</code></div>)}
         <div class="box" style="box-shadow: var(--shadow-sm)"><code>--shadow-sm</code></div>
         <div class="box" style="box-shadow: var(--shadow-md)"><code>--shadow-md</code></div>
+      </Grid>
+    </Section>
+
+    <Section title="Скругления">
+      <p class="note">Правило: объекты одного вида и размера всегда берут один токен. Вложенный объект: радиус внешнего минус отступ, тогда углы идут параллельно.</p>
+      <Grid min="14rem" gap="var(--space-4)">
+        <div class="role"><span class="tagdemo">Лендинг</span><code>--radius-tag</code><small>метки, чипы</small></div>
+        <div class="role"><span class="ctrldemo">Кнопка</span><code>--radius-control</code><small>кнопки, переключатели, язык, плитки до ~120px</small></div>
+        <div class="role"><span class="carddemo"></span><code>--radius-card</code><small>карточки, строки услуг, обложки, фото, меню</small></div>
+        <div class="role"><span class="nested"><span></span></span><code>card − отступ</code><small>вложенный: calc(card − space-3)</small></div>
       </Grid>
     </Section>
 
@@ -85,13 +94,21 @@ const radii = ['sm', 'md', 'lg'];
 </html>
 <style>
   .swatch { display: grid; gap: var(--space-2); font-size: var(--text-xs); }
-  .swatch__chip { height: 4rem; border-radius: var(--radius-md); border: 1px solid var(--color-border); }
+  .swatch__chip { height: 4rem; border-radius: var(--radius-control); border: 1px solid var(--color-border); }
   .stack { display: grid; gap: var(--space-3); margin-bottom: var(--space-6); }
   .row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); }
   .bar { display: inline-block; height: 0.75rem; background: var(--color-accent); border-radius: 2px; }
   .box { height: 5rem; display: grid; place-items: center; background: var(--color-surface); font-size: var(--text-xs); }
+  .note { color: var(--color-text-muted); max-width: 44rem; margin-bottom: var(--space-5); }
+  .role { display: grid; gap: var(--space-2); align-content: start; }
+  .role small { color: var(--color-text-muted); font-size: var(--text-xs); }
+  .tagdemo { justify-self: start; padding: var(--space-1) var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-tag); font-size: var(--text-xs); }
+  .ctrldemo { justify-self: start; display: grid; place-items: center; height: 3rem; padding-inline: var(--space-5); background: var(--color-text); color: var(--color-bg); border-radius: var(--radius-control); font-size: var(--text-sm); }
+  .carddemo { height: 7rem; background: var(--color-surface); border-radius: var(--radius-card); }
+  .nested { height: 7rem; padding: var(--space-3); background: var(--color-panel); border-radius: var(--radius-card); }
+  .nested span { display: block; height: 100%; background: rgb(255 255 255 / 0.08); border-radius: calc(var(--radius-card) - var(--space-3)); }
   code { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); }
-  .motion { margin-top: var(--space-4); height: 3rem; width: 100%; max-width: 30rem; border: 1px dashed var(--color-border); border-radius: var(--radius-md); position: relative; }
+  .motion { margin-top: var(--space-4); height: 3rem; width: 100%; max-width: 30rem; border: 1px dashed var(--color-border); border-radius: var(--radius-control); position: relative; }
   .motion span { position: absolute; top: 0.5rem; left: 0.5rem; width: 2rem; height: 2rem; border-radius: 50%; background: var(--color-accent); transition: left var(--duration-slow) var(--ease-out); }
   .motion:hover span { left: calc(100% - 2.5rem); }
 </style>

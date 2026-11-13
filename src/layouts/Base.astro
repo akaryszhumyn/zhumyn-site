@@ -36,6 +36,7 @@ const url = (l: Lang) => new URL(localize(l, path, section), Astro.site).href;
     <title>{fullTitle}</title>
     <meta name="description" content={desc} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     {noindex ? <meta name="robots" content="noindex, nofollow" /> : (
       <>
         <link rel="canonical" href={url(lang)} />
