@@ -1,7 +1,7 @@
 ---
-import { langs, localize, t, type Lang } from '../../i18n';
-interface Props { lang: Lang; path: string; available?: Lang[] }
-const { lang, path, available = [...langs] } = Astro.props;
+import { langs, localize, SECTION, t, type Lang } from '../../i18n';
+interface Props { lang: Lang; path: string; available?: Lang[]; section?: string }
+const { lang, path, available = [...langs], section = SECTION } = Astro.props;
 ---
 <details class="lang">
   <summary aria-label={t(lang).langLabel}>
@@ -10,7 +10,7 @@ const { lang, path, available = [...langs] } = Astro.props;
   </summary>
   <ul>
     {available.map((l) => (
-      <li><a href={localize(l, path)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>{t(l).langName}</a></li>
+      <li><a href={localize(l, path, section)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>{t(l).langName}</a></li>
     ))}
   </ul>
 </details>

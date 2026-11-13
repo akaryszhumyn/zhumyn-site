@@ -14,7 +14,11 @@ export const t = (lang: Lang) => dict[lang];
 export const SECTION = '/product';
 
 /** '/cases/' → '/product/cases/' (kk) или '/product/ru/cases/' (казахский без префикса языка) */
-export const localize = (lang: Lang, path = '/') => SECTION + (lang === defaultLang ? '' : `/${lang}`) + path;
+export const localize = (lang: Lang, path = '/', section = SECTION) =>
+  section + (lang === defaultLang ? '' : `/${lang}`) + path;
+
+/** Главная (zhumyn.com) лежит вне раздела: '/', '/ru/', '/en/' */
+export const HUB = '';
 
 /** Значение rest-параметра [...lang]: undefined даёт корень сайта */
 export const langParam = (lang: Lang) => (lang === defaultLang ? undefined : lang);

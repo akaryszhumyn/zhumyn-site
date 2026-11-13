@@ -1,26 +1,28 @@
 ---
-import { localize, t, type Lang } from '../../i18n';
+import { localize, SECTION, t, type Lang } from '../../i18n';
 import Container from './Container.astro';
 import LangSwitcher from './LangSwitcher.astro';
 import ThemeToggle from './ThemeToggle.astro';
-interface Props { lang: Lang; path: string; alternates?: Lang[] }
-const { lang, path, alternates } = Astro.props;
+interface Props { lang: Lang; path: string; alternates?: Lang[]; section?: string; nav?: { href: string; label: string }[] }
+const { lang, path, alternates, section = SECTION, nav } = Astro.props;
 const s = t(lang);
-const items = [
-  { href: '/cases/', label: s.nav.cases },
-  { href: '/about/', label: s.nav.about },
-  { href: '/contacts/', label: s.nav.contacts },
-];
+// Свои пункты (главная) используются как есть, без отметки «текущая страница»
+const product = [
+  { to: '/cases/', label: s.nav.cases },
+  { to: '/about/', label: s.nav.about },
+  { to: '/contacts/', label: s.nav.contacts },
+].map((i) => ({ href: localize(lang, i.to, section), label: i.label, current: path.startsWith(i.to) }));
+const items = nav ? nav.map((i) => ({ ...i, current: false })) : product;
 ---
 <header class="header">
   <Container>
     <div class="header__row">
-      <a class="header__logo" href={localize(lang)} aria-label="Akarys Zhumyn"></a>
+      <a class="header__logo" href={localize(lang, '/', section)} aria-label="Akarys Zhumyn"></a>
       <!-- На десктопе display: contents: ссылки и тумблер встают прямо в шапку. На телефоне это выезжающая карточка. -->
       <div class="menu" id="site-menu">
         <nav class="menu__nav">
           {items.map((i) => (
-            <a href={localize(lang, i.href)} aria-current={path.startsWith(i.href) ? 'page' : undefined}>{i.label}</a>
+            <a href={i.href} aria-current={i.current ? 'page' : undefined}>{i.label}</a>
           ))}
         </nav>
         <div class="menu__theme">
@@ -28,7 +30,7 @@ const items = [
           <ThemeToggle lang={lang} />
         </div>
       </div>
-      <LangSwitcher lang={lang} path={path} available={alternates} />
+      <LangSwitcher lang={lang} path={path} available={alternates} section={section} />
       <button class="burger" type="button" aria-expanded="false" aria-controls="site-menu" aria-label={s.menu}>
         <span class="burger__dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
       </button>

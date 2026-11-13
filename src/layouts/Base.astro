@@ -1,6 +1,6 @@
 ---
 import '../design-system/tokens.css';
-import { langs, localize, ogLocale, t, type Lang } from '../i18n';
+import { langs, localize, ogLocale, SECTION, t, type Lang } from '../i18n';
 import Header from '../design-system/components/Header.astro';
 import Footer from '../design-system/components/Footer.astro';
 import DotsBackground from '../design-system/components/DotsBackground.astro';
@@ -15,12 +15,16 @@ interface Props {
   noindex?: boolean;
   /** Языки, на которых эта страница существует (по умолчанию все) */
   alternates?: Lang[];
+  /** Раздел сайта: '/product' (по умолчанию) или '' для главной */
+  section?: string;
+  /** Свои пункты меню (для главной); без них меню портфолио */
+  nav?: { href: string; label: string }[];
 }
-const { lang, path, title, description, image, noindex = false, alternates = [...langs] } = Astro.props;
+const { lang, path, title, description, image, noindex = false, alternates = [...langs], section = SECTION, nav } = Astro.props;
 const s = t(lang);
 const fullTitle = title ? `${title} — ${s.meta.siteName}` : s.meta.siteName;
 const desc = description ?? s.meta.description;
-const url = (l: Lang) => new URL(localize(l, path), Astro.site).href;
+const url = (l: Lang) => new URL(localize(l, path, section), Astro.site).href;
 ---
 <!doctype html>
 <html lang={lang}>
@@ -51,7 +55,7 @@ const url = (l: Lang) => new URL(localize(l, path), Astro.site).href;
   <body>
     <DotsBackground />
     <a class="skip-link" href="#main">{s.skip}</a>
-    <Header lang={lang} path={path} alternates={alternates} />
+    <Header lang={lang} path={path} alternates={alternates} section={section} nav={nav} />
     <main id="main"><slot /></main>
     <Footer lang={lang} />
   </body>

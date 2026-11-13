@@ -10,7 +10,12 @@
     "siteName": "Akarys — Product Designer",
     "description": "Product Designer portfolio: case studies, experience, contacts."
   },
-  "nav": { "home": "Home", "cases": "Work", "about": "About", "contacts": "Contact" },
+  "nav": {
+    "home": "Home",
+    "cases": "Work",
+    "about": "About",
+    "contacts": "Contact"
+  },
   "home": {
     "eyebrow": "Product Designer",
     "title": "I make complex things simple",
@@ -39,17 +44,127 @@
     ],
     "experienceTitle": "Experience",
     "skillsTitle": "What I do",
-    "skills": ["UX research", "Prototyping", "Design systems", "UI design", "Working with metrics", "Figma"]
+    "skills": [
+      "UX research",
+      "Prototyping",
+      "Design systems",
+      "UI design",
+      "Working with metrics",
+      "Figma"
+    ]
   },
   "experience": [
-    { "period": "2023 — now", "role": "Senior Product Designer", "company": "Company A", "text": "I own the core flows of a mobile banking app." },
-    { "period": "2020 — 2023", "role": "Product Designer", "company": "Company B", "text": "Built a marketplace seller dashboard from scratch." },
-    { "period": "2018 — 2020", "role": "UI/UX Designer", "company": "Studio C", "text": "Websites and apps for a range of clients." }
+    {
+      "period": "2023 — now",
+      "role": "Senior Product Designer",
+      "company": "Company A",
+      "text": "I own the core flows of a mobile banking app."
+    },
+    {
+      "period": "2020 — 2023",
+      "role": "Product Designer",
+      "company": "Company B",
+      "text": "Built a marketplace seller dashboard from scratch."
+    },
+    {
+      "period": "2018 — 2020",
+      "role": "UI/UX Designer",
+      "company": "Studio C",
+      "text": "Websites and apps for a range of clients."
+    }
   ],
   "contacts": {
     "title": "Contact",
     "lead": "Have a role or an interesting project? Write to me, I reply fast.",
     "blockTitle": "Let's work together"
   },
-  "footer": { "rights": "All rights reserved" }
+  "footer": {
+    "rights": "All rights reserved"
+  },
+  "hub": {
+    "name": "Akarys Zhumyn",
+    "metaTitle": "Websites and branding",
+    "description": "Akarys Zhumyn: websites, branding, UI/UX and digital design. Work, services, contact.",
+    "nav": {
+      "works": "Works",
+      "services": "Services",
+      "about": "About",
+      "product": "Product Design"
+    },
+    "hero": {
+      "eyebrow": "Akarys Zhumyn · 7+ years of design experience",
+      "title": "Websites and branding that make businesses look more credible",
+      "lead": "I design websites, visual identities, and digital experiences — from initial concept and structure to launch.",
+      "talk": "Let's connect",
+      "works": "Works"
+    },
+    "works": {
+      "title": "My works",
+      "count": "100+ projects",
+      "open": "Visit website"
+    },
+    "services": {
+      "title": "Services",
+      "lead": "From idea to implementation",
+      "productLink": "Product Design portfolio",
+      "items": [
+        {
+          "title": "Web & Digital",
+          "text": "I design websites with clear structure, strong visual direction, and intuitive user journeys",
+          "tags": [
+            "Landing",
+            "Online Store",
+            "Corporate",
+            "Online Menu"
+          ]
+        },
+        {
+          "title": "Branding & Packaging",
+          "text": "I build visual brand systems — from logos to identity and key brand applications",
+          "tags": [
+            "Logotype",
+            "Identity",
+            "Brand Style",
+            "Packaging",
+            "Naming"
+          ]
+        },
+        {
+          "title": "Product & UI/UX",
+          "text": "I design interfaces for web services and digital products with clear logic and consistent user flows",
+          "tags": [
+            "UI",
+            "UX",
+            "SaaS",
+            "Design System",
+            "App"
+          ]
+        },
+        {
+          "title": "Digital Content",
+          "text": "I create visual content for advertising, social media, and digital brand communication",
+          "tags": [
+            "Banner",
+            "Ad Creative",
+            "Marketplace Cards",
+            "AI Visual",
+            "Social Media"
+          ]
+        }
+      ]
+    },
+    "clients": {
+      "title": "My clients"
+    },
+    "about": {
+      "title": "About",
+      "greeting": "Hi, my name is Akarys!",
+      "years": "7+ years of design experience"
+    },
+    "cta": {
+      "title": "Do you need a design for your business?",
+      "lead": "Tell me about the task and we'll discuss the solution, timeline and cost.",
+      "hint": "Haven't decided on the website format yet, or don't know where to start? Write to me. At the meeting, we will analyze your task, discuss the options and determine the next steps."
+    }
+  }
 }

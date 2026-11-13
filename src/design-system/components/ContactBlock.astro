@@ -10,9 +10,11 @@ const { title = t(lang).contacts.blockTitle, lead = t(lang).contacts.lead } = As
   <Heading class="contact__title">{title}</Heading>
   <p class="contact__lead">{lead}</p>
   <ul class="contact__list">
-    <li><Link href={`mailto:${contacts.email}`}>{contacts.email}</Link></li>
     <li><Link href={contacts.telegram}>Telegram</Link></li>
+    <li><Link href={contacts.whatsapp}>WhatsApp</Link></li>
     <li><Link href={contacts.linkedin}>LinkedIn</Link></li>
+    <li><Link href={contacts.behance}>Behance</Link></li>
+    <li><Link href={contacts.instagram}>Instagram</Link></li>
   </ul>
 </div>
 <style>

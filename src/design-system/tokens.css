@@ -92,6 +92,10 @@
   }
 }
 
+/* Якоря (#works и т.д.) не прячутся под липкой шапкой */
+[id] { scroll-margin-top: 6rem; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
 /* База */
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }

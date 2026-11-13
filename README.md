@@ -2,21 +2,20 @@
 
 Astro, статический сайт на трёх языках:
 
-Портфолио живёт в разделе `zhumyn.com/product/`. Остальные услуги будут соседними разделами в этом же проекте (`src/pages/<раздел>/`).
+Один проект, два раздела:
 
-| Язык | URL |
-|---|---|
-| Қазақша (по умолчанию) | `/product/` |
-| Русский | `/product/ru/` |
-| English | `/product/en/` |
+| Раздел | Қазақша (по умолчанию) | Русский | English |
+|---|---|---|---|
+| Главная (сайты, брендинг, услуги) | `/` | `/ru/` | `/en/` |
+| Портфолио Product Design | `/product/` | `/product/ru/` | `/product/en/` |
 
-Сейчас `zhumyn.com/` перенаправляет на `/product/`. Когда появится главная-визитка, создайте `src/pages/index.astro` и удалите строку `redirects` в `astro.config.mjs`.
+Новые разделы услуг добавляются как соседние папки в `src/pages/<раздел>/`.
 
 ## Запуск
 
 ```bash
 npm install
-npm run dev        # http://localhost:4321/product/
+npm run dev        # http://localhost:4321/
 npm run build      # собирает в dist/
 npm run preview    # смотреть собранную версию
 ```
@@ -32,17 +31,24 @@ src/
     components/       ← Button, Link, Tag, Card, Section, Container, Grid, Header,
                         LangSwitcher, Footer, CaseCard, Hero, Timeline, ContactBlock
   i18n/kk.json, ru.json, en.json   ← все тексты интерфейса, опыт, навыки
-  site.ts             ← email, Telegram, LinkedIn
+  site.ts             ← Telegram, WhatsApp, LinkedIn, Behance, Instagram
   i18n/index.ts       ← SECTION = '/product': раздел, в котором лежат ссылки портфолио
   content/cases/<slug>/kk.md, ru.md, en.md, cover.jpg   ← кейсы
-  pages/product/[...lang]/   ← страницы портфолио (одна страница обслуживает все три языка)
+  pages/[...lang]/index.astro  ← главная (один файл на три языка)
+  pages/product/[...lang]/     ← страницы портфолио Product Design
+  data/works.ts       ← веб-проекты на главной (ссылка, обложка, названия на 3 языках)
+  assets/works/       ← обложки проектов, assets/clients/ ← логотипы клиентов (белые SVG), assets/avatar.jpg
   pages/design-system.astro  ← витрина /design-system/ (noindex, общая для всех разделов)
 scripts/new-case.mjs
 ```
 
 Чтобы поменять стиль под референсы, правьте `tokens.css`. Компоненты используют только переменные оттуда.
 
-## Новый кейс
+## Новый проект на главной
+
+Положите обложку в `src/assets/works/`, добавьте объект в `src/data/works.ts` (ссылка, компания, срок, название/тип/сфера на `kk`, `ru`, `en`). Логотип клиента: белый SVG в `src/assets/clients/` с номером в начале имени (порядок по имени файла).
+
+## Новый кейс Product Design
 
 ```bash
 npm run new-case "Название кейса"

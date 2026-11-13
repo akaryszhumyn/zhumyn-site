@@ -1,0 +1,95 @@
+---
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Base from '../../layouts/Base.astro';
+import { Button, Card, ContactBlock, Container, Grid, Hero, Link, Section, Tag, WorkCard } from '../../design-system';
+import { HUB, langPaths, localize, t, type Lang } from '../../i18n';
+import { works } from '../../data/works';
+import { contacts } from '../../site';
+import avatar from '../../assets/avatar.jpg';
+
+export const getStaticPaths = langPaths;
+const { lang } = Astro.props as { lang: Lang };
+const h = t(lang).hub;
+
+const home = localize(lang, '/', HUB);
+const nav = [
+  { href: `${home}#works`, label: h.nav.works },
+  { href: `${home}#services`, label: h.nav.services },
+  { href: `${home}#about`, label: h.nav.about },
+  { href: localize(lang), label: h.nav.product },
+];
+
+// Логотипы клиентов: все svg из src/assets/clients в порядке имён файлов (01-, 02-, …)
+const logos = Object.entries(import.meta.glob<{ default: ImageMetadata }>('../../assets/clients/*.svg', { eager: true }))
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([path, m]) => ({ name: path.split('/').pop()!.replace(/^\d+-|\.svg$/g, ''), src: m.default.src }));
+---
+<Base lang={lang} path="/" section={HUB} nav={nav} title={h.metaTitle} description={h.description}>
+  <Container>
+    <Hero eyebrow={h.hero.eyebrow} title={h.hero.title} lead={h.hero.lead}>
+      <Button href={contacts.telegram}>{h.hero.talk}</Button>
+      <Button href={`${home}#works`} variant="secondary">{h.hero.works}</Button>
+    </Hero>
+  </Container>
+
+  <Section id="works" title={h.works.title}>
+    <p class="count">{h.works.count}</p>
+    <Grid min="26rem">
+      {works.map((w, i) => <WorkCard work={w} lang={lang} eager={i < 2} />)}
+    </Grid>
+  </Section>
+
+  <Section id="services" title={h.services.title}>
+    <p class="count">{h.services.lead}</p>
+    <Grid min="20rem">
+      {h.services.items.map((s, i) => (
+        <Card>
+          <div class="service">
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+            <div class="tags">{s.tags.map((tag) => <Tag>{tag}</Tag>)}</div>
+            {i === 2 && <Link href={localize(lang)}>{h.services.productLink} →</Link>}
+          </div>
+        </Card>
+      ))}
+    </Grid>
+  </Section>
+
+  <Section title={h.clients.title}>
+    <ul class="clients">
+      {logos.map((l) => <li><span class="logo" role="img" aria-label={l.name} style={`--logo: url(${encodeURI(l.src)})`}></span></li>)}
+    </ul>
+  </Section>
+
+  <Section id="about" title={h.about.title}>
+    <div class="about">
+      <Picture src={avatar} alt={h.name} formats={['avif', 'webp']} widths={[160, 320]} sizes="10rem" class="about__photo" />
+      <div>
+        <p class="about__greeting">{h.about.greeting}</p>
+        <p class="about__years">{h.about.years}</p>
+      </div>
+    </div>
+  </Section>
+
+  <Section id="contact">
+    <ContactBlock lang={lang} title={h.cta.title} lead={h.cta.lead} />
+    <p class="hint">{h.cta.hint}</p>
+  </Section>
+</Base>
+<style>
+  .count { color: var(--color-text-muted); margin-top: calc(var(--space-5) * -1); margin-bottom: var(--space-6); }
+  .service { display: grid; gap: var(--space-3); align-content: start; height: 100%; }
+  .service h3 { font-size: var(--text-lg); }
+  .service p { color: var(--color-text-muted); }
+  .tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-2); }
+  .clients { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr)); }
+  .clients li { display: grid; place-items: center; aspect-ratio: 3 / 2; padding: var(--space-5); background: var(--color-surface); border-radius: var(--radius-md); }
+  /* Логотипы белые на прозрачном: рисуем их маской, поэтому они берут цвет текста и читаются в обеих темах */
+  .logo { width: 100%; height: 2.75rem; background: var(--color-text); opacity: 0.7; mask: var(--logo) center / contain no-repeat; }
+  .about { display: flex; align-items: center; gap: var(--space-6); flex-wrap: wrap; }
+  :global(.about__photo) { width: 10rem; height: 10rem; object-fit: cover; border-radius: var(--radius-lg); }
+  .about__greeting { font-size: var(--text-xl); font-weight: var(--weight-medium); letter-spacing: -0.03em; line-height: var(--leading-tight); }
+  .about__years { color: var(--color-text-muted); margin-top: var(--space-2); }
+  .hint { color: var(--color-text-muted); max-width: 40rem; margin-top: var(--space-5); }
+</style>

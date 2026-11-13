@@ -1,0 +1,39 @@
+---
+import { Picture } from 'astro:assets';
+import { t, type Lang } from '../../i18n';
+import type { Work } from '../../data/works';
+import Tag from './Tag.astro';
+interface Props { work: Work; lang: Lang; eager?: boolean }
+const { work, lang, eager = false } = Astro.props;
+---
+<article class="work">
+  <a class="work__link" href={work.url} target="_blank" rel="noopener">
+    <Picture
+      src={work.cover}
+      alt={work.company}
+      formats={['avif', 'webp']}
+      widths={[480, 800, 1200]}
+      sizes="(min-width: 72rem) 34rem, (min-width: 44rem) 50vw, 100vw"
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : undefined}
+    />
+    <div class="work__body">
+      <p class="work__meta">{work.company} · {work.period[lang]}</p>
+      <h3 class="work__title">{work.title[lang]}</h3>
+      <div class="work__tags"><Tag>{work.kind[lang]}</Tag><Tag>{work.sphere[lang]}</Tag></div>
+      <span class="visually-hidden">{t(lang).hub.works.open}</span>
+    </div>
+  </a>
+</article>
+<style>
+  .work__link { display: grid; gap: var(--space-4); color: inherit; text-decoration: none; }
+  .work__link :global(img) {
+    width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: var(--radius-lg);
+    background: var(--color-surface); transition: transform var(--duration-slow) var(--ease-out);
+  }
+  .work__link:hover :global(img) { transform: scale(1.015); }
+  .work__body { display: grid; gap: var(--space-2); }
+  .work__meta { font-size: var(--text-sm); color: var(--color-text-muted); }
+  .work__title { font-size: var(--text-md); font-weight: var(--weight-medium); letter-spacing: -0.01em; }
+  .work__tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-1); }
+</style>

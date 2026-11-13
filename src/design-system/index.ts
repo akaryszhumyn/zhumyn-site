@@ -14,3 +14,4 @@ export { default as Hero } from './components/Hero.astro';
 export { default as Timeline } from './components/Timeline.astro';
 export { default as DotsBackground } from './components/DotsBackground.astro';
 export { default as ContactBlock } from './components/ContactBlock.astro';
+export { default as WorkCard } from './components/WorkCard.astro';
