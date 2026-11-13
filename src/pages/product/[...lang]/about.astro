@@ -1,0 +1,20 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { Container, Hero, Section, Tag, Timeline } from '../../../design-system';
+import { langPaths, t, type Lang } from '../../../i18n';
+
+export const getStaticPaths = langPaths;
+const { lang } = Astro.props as { lang: Lang };
+const s = t(lang);
+---
+<Base lang={lang} path="/about/" title={s.about.title} description={s.about.lead}>
+  <Container><Hero eyebrow={s.home.eyebrow} title={s.about.title} lead={s.about.lead} /></Container>
+  <Container><div class="prose">{s.about.bio.map((p) => <p>{p}</p>)}</div></Container>
+  <Section title={s.about.skillsTitle}>
+    <div class="skills">{s.about.skills.map((x) => <Tag>{x}</Tag>)}</div>
+  </Section>
+  <Section title={s.about.experienceTitle}><Timeline items={s.experience} /></Section>
+</Base>
+<style>
+  .skills { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+</style>

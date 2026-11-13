@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /design-system/
+Sitemap: https://zhumyn.com/sitemap-index.xml

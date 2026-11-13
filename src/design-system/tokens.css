@@ -1,0 +1,119 @@
+/* Дизайн-токены. Весь визуальный стиль сайта меняется здесь. */
+
+/* Medeo Sans (OFL 1.1, DNFDEVS/medeo-font), лежит в public/fonts */
+@font-face {
+  font-family: 'Medeo Sans';
+  src: url('/fonts/MedeoSansVariable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Тема: по умолчанию как в системе, data-theme="light|dark" на <html> переопределяет (переключатель) */
+  color-scheme: light dark;
+
+  /* Цвета: light-dark(светлая, тёмная) */
+  --color-bg: light-dark(#f5f5f5, #0a0a0a);
+  --color-surface: light-dark(#ffffff, #161616);
+  --color-text: light-dark(#0a0a0a, #f5f5f5);
+  --color-text-muted: light-dark(rgb(10 10 10 / 0.7), rgb(245 245 245 / 0.7));
+  --color-border: light-dark(rgb(10 10 10 / 0.1), rgb(245 245 245 / 0.1));
+  /* В тёмной теме светлее #1F5EFB: на #0A0A0A у оригинала контраст 3.8, для текста нужно 4.5 */
+  --color-accent: light-dark(#1f5efb, #5c8dff);
+  --color-accent-contrast: light-dark(#ffffff, #0a0a0a);
+  --color-focus: var(--color-accent);
+  /* Сегментные переключатели: серая подложка и активный сегмент */
+  --color-track: light-dark(rgb(10 10 10 / 0.06), rgb(245 245 245 / 0.08));
+  --color-pill: light-dark(#ffffff, rgb(245 245 245 / 0.16));
+
+  /* Шрифты */
+  --font-sans: 'Medeo Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Шкала размеров (fluid: мобильный → десктоп) */
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-md: 1.0625rem;
+  --text-lg: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --text-xl: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
+  --text-2xl: clamp(2.25rem, 1.6rem + 3vw, 4rem);
+  --leading-tight: 1.1;
+  --leading-normal: 1.55;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-bold: 600;
+
+  /* Отступы */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.75rem;
+  --space-6: 2.5rem;
+  --space-7: 4rem;
+  --space-8: clamp(4rem, 2.5rem + 5vw, 8rem);
+
+  /* Сетка */
+  --container: 72rem;
+  --gutter: clamp(1.25rem, 0.5rem + 3vw, 3rem);
+
+  /* Радиусы */
+  --radius-sm: 14px;
+  --radius-md: 22px;
+  --radius-lg: 32px;
+
+  /* Тени */
+  --shadow-sm: 0 1px 2px light-dark(rgb(10 10 10 / 0.06), rgb(0 0 0 / 0.4));
+  --shadow-md: 0 8px 28px light-dark(rgb(10 10 10 / 0.08), rgb(0 0 0 / 0.5));
+
+  /* Анимация */
+  --duration-fast: 120ms;
+  --duration-base: 220ms;
+  --duration-slow: 400ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Плавные «яблочные» углы (squircle), где браузер умеет (Chrome/Edge); в остальных обычное скругление */
+@supports (corner-shape: squircle) {
+  * { corner-shape: squircle; }
+}
+
+/* Ручной выбор темы (см. ThemeToggle) */
+:root[data-theme='light'] { color-scheme: light; }
+:root[data-theme='dark'] { color-scheme: dark; }
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+  }
+}
+
+/* База */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { line-height: var(--leading-tight); font-weight: var(--weight-medium); letter-spacing: -0.03em; margin: 0; }
+p { margin: 0; }
+img { max-width: 100%; height: auto; display: block; }
+:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; border-radius: var(--radius-sm); }
+.skip-link { position: absolute; left: -9999px; }
+.skip-link:focus { left: var(--space-4); top: var(--space-4); z-index: 10; background: var(--color-bg); padding: var(--space-2) var(--space-3); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Текст кейса из markdown */
+.prose { max-width: 44rem; display: grid; gap: var(--space-4); }
+.prose h2 { font-size: var(--text-lg); margin-top: var(--space-5); }
+.prose ul { margin: 0; padding-left: 1.2em; }
+.prose a { color: var(--color-accent); }

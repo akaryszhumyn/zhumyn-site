@@ -1,0 +1,45 @@
+---
+import { localize, t, type Lang } from '../../i18n';
+import Container from './Container.astro';
+import LangSwitcher from './LangSwitcher.astro';
+import ThemeToggle from './ThemeToggle.astro';
+interface Props { lang: Lang; path: string; alternates?: Lang[] }
+const { lang, path, alternates } = Astro.props;
+const s = t(lang);
+const items = [
+  { href: '/cases/', label: s.nav.cases },
+  { href: '/about/', label: s.nav.about },
+  { href: '/contacts/', label: s.nav.contacts },
+];
+---
+<header class="header">
+  <Container>
+    <div class="header__row">
+      <a class="header__logo" href={localize(lang)} aria-label="Akarys Zhumyn"></a>
+      <nav class="header__nav">
+        {items.map((i) => (
+          <a href={localize(lang, i.href)} aria-current={path.startsWith(i.href) ? 'page' : undefined}>{i.label}</a>
+        ))}
+      </nav>
+      <ThemeToggle lang={lang} />
+      <LangSwitcher lang={lang} path={path} available={alternates} />
+    </div>
+  </Container>
+</header>
+<style>
+  .header { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--color-bg) 85%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--color-border); }
+  .header__row { display: flex; align-items: center; gap: var(--space-4); min-height: 4.25rem; flex-wrap: wrap; }
+  /* Логотип рисуется маской, поэтому берёт цвет текста и работает в обеих темах */
+  .header__logo {
+    --h: 2.25rem; margin-right: auto;
+    width: calc(var(--h) * 2.786); height: var(--h);
+    background: var(--color-text);
+    mask: url('/logo.svg') center / contain no-repeat;
+  }
+  .header__nav { display: flex; gap: var(--space-4); font-size: var(--text-sm); }
+  .header__nav a { color: var(--color-text-muted); text-decoration: none; }
+  .header__nav a:hover, .header__nav a[aria-current] { color: var(--color-text); }
+  @media (max-width: 34rem) {
+    .header__nav { order: 3; width: 100%; padding-bottom: var(--space-2); }
+  }
+</style>

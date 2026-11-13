@@ -1,0 +1,16 @@
+{
+  "name": "zhumyn-site",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "new-case": "node scripts/new-case.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.4.11",
+    "sharp": "^0.35.5"
+  }
+}

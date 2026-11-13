@@ -1,0 +1,97 @@
+---
+// Витрина дизайн-системы. Закрыта от индексации (noindex + robots.txt + исключена из sitemap).
+import '../design-system/tokens.css';
+import {
+  Button, Card, CaseCard, ContactBlock, Container, Grid, Hero, Link, Section, Tag, Timeline,
+} from '../design-system';
+import { t } from '../i18n';
+import { getCases } from '../lib/cases';
+
+const lang = 'ru' as const;
+const [sample] = await getCases(lang);
+const colors = ['bg', 'surface', 'text', 'text-muted', 'border', 'accent', 'accent-contrast'];
+const sizes = ['xs', 'sm', 'md', 'lg', 'xl', '2xl'];
+const spaces = [1, 2, 3, 4, 5, 6, 7, 8];
+const radii = ['sm', 'md', 'lg'];
+---
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" href="/fonts/MedeoSansVariable.woff2" as="font" type="font/woff2" crossorigin />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Design system</title>
+  </head>
+  <body>
+    <Container><Hero eyebrow="zhumyn.com" title="Design system" lead="Токены живут в src/design-system/tokens.css, компоненты в src/design-system/components." /></Container>
+
+    <Section title="Цвета">
+      <Grid min="9rem" gap="var(--space-3)">
+        {colors.map((c) => (
+          <div class="swatch"><div class="swatch__chip" style={`background: var(--color-${c})`} /><code>--color-{c}</code></div>
+        ))}
+      </Grid>
+    </Section>
+
+    <Section title="Типографика">
+      <div class="stack">
+        {sizes.map((s) => <p style={`font-size: var(--text-${s}); line-height: var(--leading-tight)`}><code>--text-{s}</code> Күрделі нәрсені қарапайым етіп жасаймын</p>)}
+      </div>
+    </Section>
+
+    <Section title="Отступы, радиусы, тени">
+      <div class="stack">
+        {spaces.map((n) => <div class="row"><code>--space-{n}</code><span class="bar" style={`width: var(--space-${n})`} /></div>)}
+      </div>
+      <Grid min="9rem" gap="var(--space-3)">
+        {radii.map((r) => <div class="box" style={`border-radius: var(--radius-${r})`}><code>--radius-{r}</code></div>)}
+        <div class="box" style="box-shadow: var(--shadow-sm)"><code>--shadow-sm</code></div>
+        <div class="box" style="box-shadow: var(--shadow-md)"><code>--shadow-md</code></div>
+      </Grid>
+    </Section>
+
+    <Section title="Анимация">
+      <div class="row"><code>--duration-fast / base / slow, --ease-out, --ease-in-out</code></div>
+      <div class="motion"><span /></div>
+    </Section>
+
+    <Section title="Button, Link, Tag">
+      <div class="row">
+        <Button>Primary</Button>
+        <Button variant="secondary">Secondary</Button>
+        <Link href="#">Link</Link>
+        <Tag>Tag</Tag>
+      </div>
+    </Section>
+
+    <Section title="Card, Grid">
+      <Grid min="14rem">
+        <Card><strong>−42%</strong><p>Card</p></Card>
+        <Card><strong>×2</strong><p>Card</p></Card>
+        <Card><strong>+18</strong><p>Card</p></Card>
+      </Grid>
+    </Section>
+
+    {sample && (
+      <Section title="CaseCard">
+        <Grid min="26rem"><CaseCard entry={sample} lang={lang} /></Grid>
+      </Section>
+    )}
+
+    <Section title="Timeline"><Timeline items={t(lang).experience} /></Section>
+    <Section title="ContactBlock"><ContactBlock lang={lang} /></Section>
+  </body>
+</html>
+<style>
+  .swatch { display: grid; gap: var(--space-2); font-size: var(--text-xs); }
+  .swatch__chip { height: 4rem; border-radius: var(--radius-md); border: 1px solid var(--color-border); }
+  .stack { display: grid; gap: var(--space-3); margin-bottom: var(--space-6); }
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); }
+  .bar { display: inline-block; height: 0.75rem; background: var(--color-accent); border-radius: 2px; }
+  .box { height: 5rem; display: grid; place-items: center; background: var(--color-surface); font-size: var(--text-xs); }
+  code { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); }
+  .motion { margin-top: var(--space-4); height: 3rem; width: 100%; max-width: 30rem; border: 1px dashed var(--color-border); border-radius: var(--radius-md); position: relative; }
+  .motion span { position: absolute; top: 0.5rem; left: 0.5rem; width: 2rem; height: 2rem; border-radius: 50%; background: var(--color-accent); transition: left var(--duration-slow) var(--ease-out); }
+  .motion:hover span { left: calc(100% - 2.5rem); }
+</style>

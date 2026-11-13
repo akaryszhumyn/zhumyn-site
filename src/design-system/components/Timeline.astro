@@ -1,0 +1,29 @@
+---
+interface Item { period: string; role: string; company: string; text?: string }
+interface Props { items: Item[] }
+const { items } = Astro.props;
+---
+<ol class="timeline">
+  {items.map((i) => (
+    <li class="timeline__item">
+      <p class="timeline__period">{i.period}</p>
+      <div>
+        <h3 class="timeline__company">{i.company}</h3>
+        <p class="timeline__role">{i.role}</p>
+        {i.text && <p class="timeline__text">{i.text}</p>}
+      </div>
+    </li>
+  ))}
+</ol>
+<style>
+  .timeline { list-style: none; margin: 0; padding: 0; display: grid; }
+  .timeline__item {
+    display: grid; gap: var(--space-2) var(--space-6); padding-block: var(--space-5);
+    border-top: 1px solid var(--color-border);
+  }
+  @media (min-width: 40rem) { .timeline__item { grid-template-columns: 12rem 1fr; } }
+  .timeline__period { color: var(--color-text-muted); font-size: var(--text-sm); }
+  .timeline__company { font-size: var(--text-md); font-weight: var(--weight-medium); }
+  .timeline__role { color: var(--color-text-muted); font-size: var(--text-sm); }
+  .timeline__text { color: var(--color-text-muted); margin-top: var(--space-1); }
+</style>

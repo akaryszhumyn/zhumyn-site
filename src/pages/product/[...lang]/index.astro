@@ -1,0 +1,28 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { Button, CaseCard, Container, ContactBlock, Grid, Hero, Section } from '../../../design-system';
+import { langPaths, localize, t, type Lang } from '../../../i18n';
+import { getCases } from '../../../lib/cases';
+
+export const getStaticPaths = langPaths;
+const { lang } = Astro.props as { lang: Lang };
+const s = t(lang);
+const all = await getCases(lang);
+const featured = all.filter((c) => c.data.featured);
+const cases = (featured.length ? featured : all).slice(0, 4);
+---
+<Base lang={lang} path="/">
+  <Container>
+    <Hero eyebrow={s.home.eyebrow} title={s.home.title} lead={s.home.lead}>
+      <Button href={localize(lang, '/cases/')}>{s.home.ctaCases}</Button>
+      <Button href={localize(lang, '/contacts/')} variant="secondary">{s.home.ctaContact}</Button>
+    </Hero>
+  </Container>
+  <Section title={s.home.casesTitle}>
+    <Grid min="26rem">
+      {cases.map((c, i) => <CaseCard entry={c} lang={lang} eager={i === 0} />)}
+    </Grid>
+    <p style="margin-top: var(--space-6)"><Button href={localize(lang, '/cases/')} variant="secondary">{s.home.allCases} →</Button></p>
+  </Section>
+  <Section><ContactBlock lang={lang} /></Section>
+</Base>

@@ -1,0 +1,17 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import { CaseCard, Container, Grid, Hero, Section } from '../../../../design-system';
+import { langPaths, t, type Lang } from '../../../../i18n';
+import { getCases } from '../../../../lib/cases';
+
+export const getStaticPaths = langPaths;
+const { lang } = Astro.props as { lang: Lang };
+const s = t(lang);
+const cases = await getCases(lang);
+---
+<Base lang={lang} path="/cases/" title={s.cases.title} description={s.cases.lead}>
+  <Container><Hero title={s.cases.title} lead={s.cases.lead} /></Container>
+  <Section>
+    <Grid min="26rem">{cases.map((c, i) => <CaseCard entry={c} lang={lang} eager={i < 2} />)}</Grid>
+  </Section>
+</Base>

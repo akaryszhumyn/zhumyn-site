@@ -1,0 +1,15 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+type Props = HTMLAttributes<'a'>;
+const { class: cls, ...rest } = Astro.props;
+const external = typeof rest.href === 'string' && /^https?:/.test(rest.href);
+---
+<a class:list={['link', cls]} {...(external ? { target: '_blank', rel: 'noopener' } : {})} {...rest}><slot /></a>
+<style>
+  .link {
+    color: inherit; text-decoration: underline; text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em; text-decoration-color: var(--color-border);
+    transition: text-decoration-color var(--duration-base) var(--ease-out);
+  }
+  .link:hover { text-decoration-color: currentColor; }
+</style>

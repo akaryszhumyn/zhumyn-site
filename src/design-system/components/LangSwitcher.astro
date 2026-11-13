@@ -1,0 +1,45 @@
+---
+import { langs, localize, t, type Lang } from '../../i18n';
+interface Props { lang: Lang; path: string; available?: Lang[] }
+const { lang, path, available = [...langs] } = Astro.props;
+---
+<details class="lang">
+  <summary aria-label={t(lang).langLabel}>
+    {t(lang).langName}
+    <svg viewBox="0 0 12 12" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5l4 4 4-4" /></svg>
+  </summary>
+  <ul>
+    {available.map((l) => (
+      <li><a href={localize(l, path)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>{t(l).langName}</a></li>
+    ))}
+  </ul>
+</details>
+<style>
+  .lang { position: relative; font-size: var(--text-sm); }
+  summary {
+    display: inline-flex; align-items: center; gap: var(--space-2); cursor: pointer; list-style: none;
+    height: 2.75rem; padding: 0 var(--space-3) 0 var(--space-4); border-radius: var(--radius-md);
+    background: var(--color-track); color: var(--color-text);
+    transition: background var(--duration-base) var(--ease-out);
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary svg { transition: transform var(--duration-base) var(--ease-out); }
+  .lang[open] summary svg { transform: rotate(180deg); }
+  ul {
+    position: absolute; right: 0; top: calc(100% + var(--space-2)); min-width: 100%; margin: 0; padding: var(--space-1);
+    list-style: none; background: var(--color-surface);
+    border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+  }
+  a { display: block; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); color: var(--color-text-muted); text-decoration: none; white-space: nowrap; }
+  a:hover { color: var(--color-text); background: var(--color-track); }
+  a[aria-current] { color: var(--color-text); font-weight: var(--weight-medium); }
+</style>
+<script>
+  // Закрываем меню по клику вне его и по Escape
+  const close = (except?: EventTarget | null) =>
+    document.querySelectorAll<HTMLDetailsElement>('details.lang[open]').forEach((d) => {
+      if (!except || !d.contains(except as Node)) d.open = false;
+    });
+  addEventListener('click', (e) => close(e.target));
+  addEventListener('keydown', (e) => e.key === 'Escape' && close());
+</script>

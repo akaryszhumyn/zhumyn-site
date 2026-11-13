@@ -1,0 +1,16 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { ContactBlock, Container } from '../../../design-system';
+import { langPaths, t, type Lang } from '../../../i18n';
+
+export const getStaticPaths = langPaths;
+const { lang } = Astro.props as { lang: Lang };
+const s = t(lang);
+---
+<Base lang={lang} path="/contacts/" title={s.contacts.title} description={s.contacts.lead}>
+  <Container>
+    <div style="padding-block: var(--space-8)">
+      <ContactBlock lang={lang} title={s.contacts.title} heading="h1" />
+    </div>
+  </Container>
+</Base>

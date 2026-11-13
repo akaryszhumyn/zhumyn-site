@@ -1,0 +1,62 @@
+---
+import { Picture } from 'astro:assets';
+import { render } from 'astro:content';
+import Base from '../../../../layouts/Base.astro';
+import { Card, Container, Grid, Link, Section, Tag } from '../../../../design-system';
+import { langParam, langs, localize, t, type Lang } from '../../../../i18n';
+import { getCases, type CaseEntry } from '../../../../lib/cases';
+
+export async function getStaticPaths() {
+  const byLang = await Promise.all(langs.map(async (lang) => ({ lang, cases: await getCases(lang) })));
+  // На каких языках опубликован каждый кейс: для hreflang и переключателя языка
+  const available = (slug: string) => byLang.filter((b) => b.cases.some((c) => c.slug === slug)).map((b) => b.lang);
+  return byLang.flatMap(({ lang, cases }) =>
+    cases.map((entry) => ({
+      params: { lang: langParam(lang), slug: entry.slug },
+      props: { lang, entry, alternates: available(entry.slug) },
+    })),
+  );
+}
+const { lang, entry, alternates } = Astro.props as { lang: Lang; entry: CaseEntry; alternates: Lang[] };
+const s = t(lang);
+const d = entry.data;
+const { Content } = await render(entry);
+---
+<Base lang={lang} path={`/cases/${entry.slug}/`} title={d.title} description={d.summary} image={d.cover.src} alternates={alternates}>
+  <article>
+    <Container>
+      <header class="case-head">
+        <Link href={localize(lang, '/cases/')}>← {s.cases.back}</Link>
+        <h1>{d.title}</h1>
+        <p class="case-lead">{d.summary}</p>
+        <dl class="case-facts">
+          <div><dt>{s.cases.company}</dt><dd>{d.company}</dd></div>
+          <div><dt>{s.cases.role}</dt><dd>{d.role}</dd></div>
+          <div><dt>{s.cases.period}</dt><dd>{d.period}</dd></div>
+        </dl>
+        {d.tags.length > 0 && <div class="case-tags">{d.tags.map((tag) => <Tag>{tag}</Tag>)}</div>}
+      </header>
+      <Picture src={d.cover} alt={d.coverAlt} formats={['avif', 'webp']} widths={[480, 960, 1440]} sizes="(min-width: 72rem) 68rem, 100vw" loading="eager" fetchpriority="high" class="case-cover" />
+    </Container>
+    {d.metrics.length > 0 && (
+      <Section title={s.cases.results}>
+        <Grid min="12rem">
+          {d.metrics.map((m) => <Card><p class="metric__value">{m.value}</p><p class="metric__label">{m.label}</p></Card>)}
+        </Grid>
+      </Section>
+    )}
+    <Section><div class="prose"><Content /></div></Section>
+  </article>
+</Base>
+<style>
+  .case-head { display: grid; gap: var(--space-5); padding-block: var(--space-7) var(--space-6); max-width: 52rem; }
+  h1 { font-size: var(--text-2xl); }
+  .case-lead { font-size: var(--text-lg); color: var(--color-text-muted); }
+  .case-facts { display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-7); margin: 0; }
+  dt { font-size: var(--text-xs); color: var(--color-text-muted); }
+  dd { margin: 0; font-weight: var(--weight-medium); }
+  .case-tags { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  :global(.case-cover) { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius-lg); background: var(--color-surface); }
+  .metric__value { font-size: var(--text-xl); font-weight: var(--weight-medium); color: var(--color-accent); }
+  .metric__label { color: var(--color-text-muted); font-size: var(--text-sm); }
+</style>

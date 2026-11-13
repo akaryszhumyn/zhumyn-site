@@ -1,0 +1,54 @@
+{
+  "langName": "Eng",
+  "langLabel": "Choose language",
+  "themeLabel": "Theme",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "skip": "Skip to content",
+  "meta": {
+    "siteName": "Akarys — Product Designer",
+    "description": "Product Designer portfolio: case studies, experience, contacts."
+  },
+  "nav": { "home": "Home", "cases": "Work", "about": "About", "contacts": "Contact" },
+  "home": {
+    "eyebrow": "Product Designer",
+    "title": "I make complex things simple",
+    "lead": "I design products from research to release. I enjoy working closely with teams and measuring results in numbers.",
+    "ctaCases": "See my work",
+    "ctaContact": "Get in touch",
+    "casesTitle": "Selected work",
+    "allCases": "All case studies"
+  },
+  "cases": {
+    "title": "Case studies",
+    "lead": "What the problem was, what I did, and what changed.",
+    "company": "Company",
+    "role": "Role",
+    "period": "Timeline",
+    "results": "Results",
+    "back": "All case studies",
+    "read": "Read case study"
+  },
+  "about": {
+    "title": "About me",
+    "lead": "Hi! I'm Akarys, a product designer.",
+    "bio": [
+      "I've spent several years working on digital products: fintech, e-commerce, B2B services.",
+      "A pretty screen isn't enough for me. What matters is that the person's problem actually gets solved. So I research, prototype, test, and then test again."
+    ],
+    "experienceTitle": "Experience",
+    "skillsTitle": "What I do",
+    "skills": ["UX research", "Prototyping", "Design systems", "UI design", "Working with metrics", "Figma"]
+  },
+  "experience": [
+    { "period": "2023 — now", "role": "Senior Product Designer", "company": "Company A", "text": "I own the core flows of a mobile banking app." },
+    { "period": "2020 — 2023", "role": "Product Designer", "company": "Company B", "text": "Built a marketplace seller dashboard from scratch." },
+    { "period": "2018 — 2020", "role": "UI/UX Designer", "company": "Studio C", "text": "Websites and apps for a range of clients." }
+  ],
+  "contacts": {
+    "title": "Contact",
+    "lead": "Have a role or an interesting project? Write to me, I reply fast.",
+    "blockTitle": "Let's work together"
+  },
+  "footer": { "rights": "All rights reserved" }
+}

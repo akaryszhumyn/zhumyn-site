@@ -1,0 +1,14 @@
+---
+import { t, type Lang } from '../../i18n';
+import Container from './Container.astro';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+<footer class="footer">
+  <Container>
+    <p>© {new Date().getFullYear()} Akarys. {t(lang).footer.rights}.</p>
+  </Container>
+</footer>
+<style>
+  .footer { padding-block: var(--space-6); border-top: 1px solid var(--color-border); color: var(--color-text-muted); font-size: var(--text-sm); }
+</style>

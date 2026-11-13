@@ -1,0 +1,104 @@
+---
+// Точечный фон на весь экран. Курсор мягко отталкивает точки, пружина возвращает их на место.
+// Цвет берётся из --color-text (обе темы).
+---
+<canvas id="dots" aria-hidden="true"></canvas>
+<style>
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+</style>
+<script>
+  const STEP = 24; // расстояние между точками, px
+  const RADIUS = 130; // радиус отталкивания, px
+  const PUSH = 1.6; // сила отталкивания (максимальный сдвиг ≈ PUSH / SPRING px)
+  const SPRING = 0.045; // как быстро точки возвращаются: меньше = мягче и медленнее
+  const DAMP = 0.86; // трение: ближе к 1 = дольше «качаются»
+  const DOT = 1.05; // радиус точки, px
+  const ALPHA = 0.12; // чуть заметнее фона
+
+  const canvas = document.getElementById('dots') as HTMLCanvasElement;
+  const ctx = canvas.getContext('2d')!;
+  let w = 0, h = 0, color = '#000';
+  let cols = 0, rows = 0;
+  let ox = new Float32Array(0), oy = ox, vx = ox, vy = ox; // сдвиг и скорость каждой точки
+  let mx = 0, my = 0, tx = 0, ty = 0, active = false, raf = 0, last = 0;
+
+  const readColor = () => {
+    color = getComputedStyle(document.body).color; // уже посчитанный цвет (light-dark() в canvas не работает)
+  };
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = color;
+    ctx.globalAlpha = ALPHA;
+    ctx.beginPath();
+    for (let r = 0, i = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++, i++) {
+        const x = c * STEP + STEP / 2 + ox[i], y = r * STEP + STEP / 2 + oy[i];
+        ctx.moveTo(x + DOT, y);
+        ctx.arc(x, y, DOT, 0, 6.2832);
+      }
+    }
+    ctx.fill();
+  }
+
+  // k: сколько «стандартных» кадров (16.7 мс) прошло, чтобы скорость не зависела от частоты экрана
+  function step(k: number) {
+    const damp = Math.pow(DAMP, k), r2 = RADIUS * RADIUS;
+    let energy = 0;
+    for (let r = 0, i = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++, i++) {
+        if (active) {
+          const px = c * STEP + STEP / 2 + ox[i] - mx, py = r * STEP + STEP / 2 + oy[i] - my;
+          const d2 = px * px + py * py;
+          if (d2 < r2 && d2 > 0.01) {
+            const d = Math.sqrt(d2), f = 1 - d / RADIUS;
+            const push = (f * f * PUSH * k) / d;
+            vx[i] += px * push; vy[i] += py * push;
+          }
+        }
+        vx[i] = (vx[i] - ox[i] * SPRING * k) * damp;
+        vy[i] = (vy[i] - oy[i] * SPRING * k) * damp;
+        ox[i] += vx[i] * k; oy[i] += vy[i] * k;
+        energy += Math.abs(ox[i]) + Math.abs(oy[i]) + Math.abs(vx[i]) + Math.abs(vy[i]);
+      }
+    }
+    return energy;
+  }
+
+  function frame(t: number) {
+    const k = Math.min(2, (t - last) / 16.7 || 1);
+    last = t;
+    const follow = Math.min(1, 0.3 * k); // курсор тоже сглажен, поэтому толчок плавный
+    mx += (tx - mx) * follow; my += (ty - my) * follow;
+    const energy = step(k);
+    draw();
+    if (active || energy > 0.05) raf = requestAnimationFrame(frame);
+    else { raf = 0; ox.fill(0); oy.fill(0); vx.fill(0); vy.fill(0); draw(); }
+  }
+
+  function resize() {
+    const dpr = devicePixelRatio || 1;
+    w = innerWidth; h = innerHeight;
+    canvas.width = w * dpr; canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cols = Math.ceil(w / STEP); rows = Math.ceil(h / STEP);
+    const n = cols * rows;
+    ox = new Float32Array(n); oy = new Float32Array(n); vx = new Float32Array(n); vy = new Float32Array(n);
+    draw();
+  }
+
+  readColor();
+  resize();
+  addEventListener('resize', resize);
+  addEventListener('themechange', () => { readColor(); draw(); });
+
+  // Без анимации (prefers-reduced-motion) остаются только статичные точки
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    addEventListener('pointermove', (e) => {
+      tx = e.clientX; ty = e.clientY;
+      if (!active) { mx = tx; my = ty; active = true; }
+      if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); }
+    }, { passive: true });
+    document.documentElement.addEventListener('pointerleave', () => { active = false; });
+  }
+</script>

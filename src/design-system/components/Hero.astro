@@ -1,0 +1,17 @@
+---
+interface Props { eyebrow?: string; title: string; lead?: string }
+const { eyebrow, title, lead } = Astro.props;
+---
+<header class="hero">
+  {eyebrow && <p class="hero__eyebrow">{eyebrow}</p>}
+  <h1 class="hero__title">{title}</h1>
+  {lead && <p class="hero__lead">{lead}</p>}
+  {Astro.slots.has('default') && <div class="hero__actions"><slot /></div>}
+</header>
+<style>
+  .hero { padding-block: var(--space-8) var(--space-6); display: grid; gap: var(--space-5); max-width: 52rem; }
+  .hero__eyebrow { font-size: var(--text-sm); color: var(--color-text-muted); }
+  .hero__title { font-size: var(--text-2xl); }
+  .hero__lead { font-size: var(--text-lg); color: var(--color-text-muted); max-width: 40rem; }
+  .hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+</style>
