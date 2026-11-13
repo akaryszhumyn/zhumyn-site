@@ -38,11 +38,13 @@ const items = nav ? nav.map((i) => ({ ...i, current: false })) : product;
   </Container>
 </header>
 <style>
-  .header {
-    position: sticky; top: 0; z-index: 5;
-    background: color-mix(in srgb, var(--color-bg) 85%, transparent); backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--color-border);
-    overflow-x: clip; /* закрытое меню стоит за правым краем и не должно давать горизонтальную прокрутку */
+  .header { position: sticky; top: 0; z-index: 5; border-bottom: 1px solid var(--color-border); }
+  /* Размытие фона вынесено в псевдоэлемент: backdrop-filter прямо на шапке ломает позиционирование
+     выпадающих списков внутри неё (в Safari они пропадают) */
+  .header::before {
+    content: ''; position: absolute; inset: 0; z-index: -1;
+    background: color-mix(in srgb, var(--color-bg) 85%, transparent);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
   }
   .header__row { display: flex; align-items: center; gap: var(--space-4); min-height: 4.25rem; }
   /* Логотип рисуется маской, поэтому берёт цвет текста и работает в обеих темах */
@@ -84,10 +86,10 @@ const items = nav ? nav.map((i) => ({ ...i, current: false })) : product;
     /* Выезжающая справа карточка: с отступами от краёв и скруглением */
     .menu {
       display: flex; flex-direction: column; gap: var(--space-4);
-      position: absolute; top: calc(100% + var(--space-2)); right: var(--space-3);
+      position: fixed; top: calc(5rem + 1px + var(--space-2)); right: var(--space-3); /* под шапкой: 5rem + рамка */
       width: min(20rem, calc(100vw - var(--space-3) * 2));
       padding: var(--space-5);
-      background: var(--color-surface); border-radius: var(--radius-card); box-shadow: var(--shadow-md);
+      background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-card); box-shadow: var(--shadow-md);
       transform: translateX(calc(100% + var(--space-6))); visibility: hidden;
       transition: transform var(--duration-slow) var(--ease-out), visibility 0s linear var(--duration-slow);
     }
