@@ -16,19 +16,33 @@ const items = [
   <Container>
     <div class="header__row">
       <a class="header__logo" href={localize(lang)} aria-label="Akarys Zhumyn"></a>
-      <nav class="header__nav">
-        {items.map((i) => (
-          <a href={localize(lang, i.href)} aria-current={path.startsWith(i.href) ? 'page' : undefined}>{i.label}</a>
-        ))}
-      </nav>
-      <ThemeToggle lang={lang} />
+      <!-- На десктопе display: contents: ссылки и тумблер встают прямо в шапку. На телефоне это выезжающая карточка. -->
+      <div class="menu" id="site-menu">
+        <nav class="menu__nav">
+          {items.map((i) => (
+            <a href={localize(lang, i.href)} aria-current={path.startsWith(i.href) ? 'page' : undefined}>{i.label}</a>
+          ))}
+        </nav>
+        <div class="menu__theme">
+          <span class="menu__label">{s.themeLabel}</span>
+          <ThemeToggle lang={lang} />
+        </div>
+      </div>
       <LangSwitcher lang={lang} path={path} available={alternates} />
+      <button class="burger" type="button" aria-expanded="false" aria-controls="site-menu" aria-label={s.menu}>
+        <span class="burger__dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      </button>
     </div>
   </Container>
 </header>
 <style>
-  .header { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--color-bg) 85%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--color-border); }
-  .header__row { display: flex; align-items: center; gap: var(--space-4); min-height: 4.25rem; flex-wrap: wrap; }
+  .header {
+    position: sticky; top: 0; z-index: 5;
+    background: color-mix(in srgb, var(--color-bg) 85%, transparent); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border);
+    overflow-x: clip; /* закрытое меню стоит за правым краем и не должно давать горизонтальную прокрутку */
+  }
+  .header__row { display: flex; align-items: center; gap: var(--space-4); min-height: 4.25rem; }
   /* Логотип рисуется маской, поэтому берёт цвет текста и работает в обеих темах */
   .header__logo {
     --h: 2.25rem; margin-right: auto;
@@ -36,10 +50,93 @@ const items = [
     background: var(--color-text);
     mask: url('/logo.svg') center / contain no-repeat;
   }
-  .header__nav { display: flex; gap: var(--space-4); font-size: var(--text-sm); }
-  .header__nav a { color: var(--color-text-muted); text-decoration: none; }
-  .header__nav a:hover, .header__nav a[aria-current] { color: var(--color-text); }
-  @media (max-width: 34rem) {
-    .header__nav { order: 3; width: 100%; padding-bottom: var(--space-2); }
+
+  .menu, .menu__theme { display: contents; }
+  .menu__nav { display: flex; gap: var(--space-4); font-size: var(--text-sm); }
+  .menu__nav a { color: var(--color-text-muted); text-decoration: none; }
+  .menu__nav a:hover, .menu__nav a[aria-current] { color: var(--color-text); }
+  .menu__label, .burger { display: none; }
+
+  /* Кнопка меню: фон и четыре круга 2×2, которые случайно меняются местами (скрипт ниже) */
+  .burger {
+    width: 2.75rem; height: 2.75rem; padding: 0; border: 0; cursor: pointer;
+    place-items: center; border-radius: var(--radius-md);
+    background: var(--color-track); color: var(--color-text);
+  }
+  .burger__dots { position: relative; width: 1.25rem; height: 1.25rem; }
+  .burger__dots i {
+    position: absolute; top: 0; left: 0; width: 0.5rem; height: 0.5rem;
+    border-radius: 50%; corner-shape: round; /* без squircle, иначе круги станут «квадратиками» */
+    background: currentColor;
+    transform: translate(var(--x, 0), var(--y, 0));
+    transition: transform var(--duration-slow) var(--ease-out);
+  }
+  .burger__dots i:nth-child(2) { --x: 0.75rem; }
+  .burger__dots i:nth-child(3) { --y: 0.75rem; }
+  .burger__dots i:nth-child(4) { --x: 0.75rem; --y: 0.75rem; }
+
+  @media (max-width: 48rem) {
+    .header__row { min-height: 5rem; gap: var(--space-3); }
+    .burger { display: grid; }
+
+    /* Выезжающая справа карточка: с отступами от краёв и скруглением */
+    .menu {
+      display: flex; flex-direction: column; gap: var(--space-4);
+      position: absolute; top: calc(100% + var(--space-2)); right: var(--space-3);
+      width: min(20rem, calc(100vw - var(--space-3) * 2));
+      padding: var(--space-5);
+      background: var(--color-surface); border-radius: var(--radius-lg); box-shadow: var(--shadow-md);
+      transform: translateX(calc(100% + var(--space-6))); visibility: hidden;
+      transition: transform var(--duration-slow) var(--ease-out), visibility 0s linear var(--duration-slow);
+    }
+    .menu[data-open] {
+      transform: none; visibility: visible;
+      transition: transform var(--duration-slow) var(--ease-out);
+    }
+    .menu__nav { flex-direction: column; gap: var(--space-1); font-size: var(--text-lg); }
+    .menu__nav a { padding: var(--space-3) var(--space-4); margin-inline: calc(var(--space-4) * -1); border-radius: var(--radius-md); }
+    .menu__nav a:hover, .menu__nav a[aria-current] { background: var(--color-track); }
+    .menu__theme {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: var(--space-4); border-top: 1px solid var(--color-border);
+    }
+    .menu__label { display: block; font-size: var(--text-sm); color: var(--color-text-muted); }
   }
 </style>
+<script>
+  const burger = document.querySelector<HTMLButtonElement>('.burger')!;
+  const menu = document.getElementById('site-menu')!;
+
+  // Меню: открыть/закрыть кнопкой, закрыть по Escape, клику вне меню и по ссылке
+  const setOpen = (open: boolean) => {
+    menu.toggleAttribute('data-open', open);
+    burger.setAttribute('aria-expanded', String(open));
+  };
+  burger.addEventListener('click', () => setOpen(!menu.hasAttribute('data-open')));
+  addEventListener('keydown', (e) => e.key === 'Escape' && setOpen(false));
+  addEventListener('click', (e) => {
+    const inside = menu.contains(e.target as Node) || burger.contains(e.target as Node);
+    if (!inside || (e.target as HTMLElement).closest('.menu__nav a')) setOpen(false);
+  });
+
+  // Четыре круга: время от времени два случайных меняются местами
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const dots = [...burger.querySelectorAll<HTMLElement>('i')];
+    const slot = [0, 1, 2, 3]; // slot[i]: в какой клетке 2×2 сейчас круг i
+    const place = () =>
+      dots.forEach((d, i) => {
+        d.style.setProperty('--x', `${(slot[i] % 2) * 0.75}rem`);
+        d.style.setProperty('--y', `${Math.floor(slot[i] / 2) * 0.75}rem`);
+      });
+    const swap = () => {
+      if (burger.offsetParent) { // на десктопе кнопка скрыта, анимировать нечего
+        const a = Math.floor(Math.random() * 4);
+        const b = (a + 1 + Math.floor(Math.random() * 3)) % 4; // любой, кроме a
+        [slot[a], slot[b]] = [slot[b], slot[a]];
+        place();
+      }
+      setTimeout(swap, 1200 + Math.random() * 1800);
+    };
+    setTimeout(swap, 1200);
+  }
+</script>
