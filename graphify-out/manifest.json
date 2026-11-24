@@ -1,0 +1,290 @@
+{
+  "astro.config.mjs": {
+    "mtime": 1794573531.6218386,
+    "seen": 1795513807.812031,
+    "ast_hash": "47613aad30d2e47cef34c3fa034e45e0",
+    "semantic_hash": "47613aad30d2e47cef34c3fa034e45e0"
+  },
+  "package.json": {
+    "mtime": 1794566079.4120872,
+    "seen": 1795513807.812048,
+    "ast_hash": "9b7c7741a0c3da5036f56d409b11deb3",
+    "semantic_hash": "9b7c7741a0c3da5036f56d409b11deb3"
+  },
+  "scripts/new-case.mjs": {
+    "mtime": 1794566014.8248281,
+    "seen": 1795513807.812057,
+    "ast_hash": "d45e8876b5a3d9bde27fdeaaf91fc813",
+    "semantic_hash": "d45e8876b5a3d9bde27fdeaaf91fc813"
+  },
+  "src/content.config.ts": {
+    "mtime": 1794566014.6768856,
+    "seen": 1795513807.812062,
+    "ast_hash": "83e4aab0d680434071a19bde876395b7",
+    "semantic_hash": "83e4aab0d680434071a19bde876395b7"
+  },
+  "src/data/works.ts": {
+    "mtime": 1794573531.6947684,
+    "seen": 1795513807.812067,
+    "ast_hash": "8833deb9128b2c77baab3f7f1dd3b042",
+    "semantic_hash": "8833deb9128b2c77baab3f7f1dd3b042"
+  },
+  "src/design-system/components/Button.astro": {
+    "mtime": 1794573531.6955907,
+    "seen": 1795513807.8120708,
+    "ast_hash": "e32146dfd53974832407583d4a2312df",
+    "semantic_hash": "e32146dfd53974832407583d4a2312df"
+  },
+  "src/design-system/components/Card.astro": {
+    "mtime": 1794573531.69619,
+    "seen": 1795513807.812075,
+    "ast_hash": "fa25504ff1874ab6c2f2c8142cb2beb6",
+    "semantic_hash": "fa25504ff1874ab6c2f2c8142cb2beb6"
+  },
+  "src/design-system/components/CaseCard.astro": {
+    "mtime": 1794573531.6967392,
+    "seen": 1795513807.8120792,
+    "ast_hash": "f4409c5d2f6658cd40ef08ccb91559a8",
+    "semantic_hash": "f4409c5d2f6658cd40ef08ccb91559a8"
+  },
+  "src/design-system/components/ContactBlock.astro": {
+    "mtime": 1794573531.697269,
+    "seen": 1795513807.812083,
+    "ast_hash": "f73f001c91c5559479a61339c3f864f6",
+    "semantic_hash": "f73f001c91c5559479a61339c3f864f6"
+  },
+  "src/design-system/components/Container.astro": {
+    "mtime": 1795511848.4476902,
+    "seen": 1795513807.812087,
+    "ast_hash": "5c7236583deb8ff6137a3aad7d7c98f1",
+    "semantic_hash": "5c7236583deb8ff6137a3aad7d7c98f1"
+  },
+  "src/design-system/components/DotsBackground.astro": {
+    "mtime": 1794566014.70727,
+    "seen": 1795513807.8120909,
+    "ast_hash": "53f1c97070f51ef315a362c8c19964cc",
+    "semantic_hash": "53f1c97070f51ef315a362c8c19964cc"
+  },
+  "src/design-system/components/Footer.astro": {
+    "mtime": 1794566014.7041938,
+    "seen": 1795513807.812095,
+    "ast_hash": "cf1de8829e2a49d3096b13fc4cb52262",
+    "semantic_hash": "cf1de8829e2a49d3096b13fc4cb52262"
+  },
+  "src/design-system/components/Grid.astro": {
+    "mtime": 1794566014.7255251,
+    "seen": 1795513807.812099,
+    "ast_hash": "fcc145f8003c368bb09c35d6df8b4c40",
+    "semantic_hash": "fcc145f8003c368bb09c35d6df8b4c40"
+  },
+  "src/design-system/components/Header.astro": {
+    "mtime": 1795511403.2244847,
+    "seen": 1795513807.8121028,
+    "ast_hash": "1bbb207e3685234e6787e5fe7c6ce5a0",
+    "semantic_hash": "1bbb207e3685234e6787e5fe7c6ce5a0"
+  },
+  "src/design-system/components/Hero.astro": {
+    "mtime": 1795511859.9653423,
+    "seen": 1795513807.812106,
+    "ast_hash": "198aaeb594befd4b485317e0b1b6c4c7",
+    "semantic_hash": "198aaeb594befd4b485317e0b1b6c4c7"
+  },
+  "src/design-system/components/LangSwitcher.astro": {
+    "mtime": 1794574881.2675898,
+    "seen": 1795513807.8121102,
+    "ast_hash": "e995cafc61172f775417a3237efd50a7",
+    "semantic_hash": "e995cafc61172f775417a3237efd50a7"
+  },
+  "src/design-system/components/Link.astro": {
+    "mtime": 1794566014.6954222,
+    "seen": 1795513807.8121128,
+    "ast_hash": "0b180b17b79f31c142045588aadd552b",
+    "semantic_hash": "0b180b17b79f31c142045588aadd552b"
+  },
+  "src/design-system/components/Section.astro": {
+    "mtime": 1794566014.7277644,
+    "seen": 1795513807.812117,
+    "ast_hash": "a5be5e3192d08a7061a537b0391fec24",
+    "semantic_hash": "a5be5e3192d08a7061a537b0391fec24"
+  },
+  "src/design-system/components/Tag.astro": {
+    "mtime": 1794573531.6990724,
+    "seen": 1795513807.8121212,
+    "ast_hash": "a32ba08caa2c37cdfb7910456f6c8c46",
+    "semantic_hash": "a32ba08caa2c37cdfb7910456f6c8c46"
+  },
+  "src/design-system/components/ThemeToggle.astro": {
+    "mtime": 1794573531.699484,
+    "seen": 1795513807.812124,
+    "ast_hash": "d129745bd2ffcd9bd234ce7b5015f8b6",
+    "semantic_hash": "d129745bd2ffcd9bd234ce7b5015f8b6"
+  },
+  "src/design-system/components/Timeline.astro": {
+    "mtime": 1794566014.6985483,
+    "seen": 1795513807.812128,
+    "ast_hash": "25437fa01ead29a2ba4b40faf41e13af",
+    "semantic_hash": "25437fa01ead29a2ba4b40faf41e13af"
+  },
+  "src/design-system/components/WorkCard.astro": {
+    "mtime": 1794573531.699811,
+    "seen": 1795513807.8121321,
+    "ast_hash": "1e849edcacab735a6e564ada7c660716",
+    "semantic_hash": "1e849edcacab735a6e564ada7c660716"
+  },
+  "src/design-system/index.ts": {
+    "mtime": 1794573531.7003288,
+    "seen": 1795513807.812137,
+    "ast_hash": "ebeafdb86b7da67a4bcf7aa0684d1ee3",
+    "semantic_hash": "ebeafdb86b7da67a4bcf7aa0684d1ee3"
+  },
+  "src/i18n/en.json": {
+    "mtime": 1795511422.8376606,
+    "seen": 1795513807.812141,
+    "ast_hash": "337ac07ec62f629b6addfeb937d35c70",
+    "semantic_hash": "337ac07ec62f629b6addfeb937d35c70"
+  },
+  "src/i18n/index.ts": {
+    "mtime": 1794573531.7022178,
+    "seen": 1795513807.812144,
+    "ast_hash": "974ad71904cf584c294d418e76dab75f",
+    "semantic_hash": "974ad71904cf584c294d418e76dab75f"
+  },
+  "src/i18n/kk.json": {
+    "mtime": 1795511422.8343697,
+    "seen": 1795513807.8121479,
+    "ast_hash": "ec5e3b265d45f33fdbf520b74f303496",
+    "semantic_hash": "ec5e3b265d45f33fdbf520b74f303496"
+  },
+  "src/i18n/ru.json": {
+    "mtime": 1795511422.836027,
+    "seen": 1795513807.8121521,
+    "ast_hash": "c50a60b4c00f3b8a5ade4b8a9e4cd6ea",
+    "semantic_hash": "c50a60b4c00f3b8a5ade4b8a9e4cd6ea"
+  },
+  "src/layouts/Base.astro": {
+    "mtime": 1794573531.704386,
+    "seen": 1795513807.812156,
+    "ast_hash": "bfa7efec3da96527d09787cd239c2b9b",
+    "semantic_hash": "bfa7efec3da96527d09787cd239c2b9b"
+  },
+  "src/lib/cases.ts": {
+    "mtime": 1794566014.77361,
+    "seen": 1795513807.812159,
+    "ast_hash": "aa83540a0be26975021e8c9eb4225064",
+    "semantic_hash": "aa83540a0be26975021e8c9eb4225064"
+  },
+  "src/lib/dither-portrait.js": {
+    "mtime": 1795511848.440369,
+    "seen": 1795513807.812163,
+    "ast_hash": "b29394190434d65a7235fac02556b4b6",
+    "semantic_hash": "b29394190434d65a7235fac02556b4b6"
+  },
+  "src/pages/[...lang]/index.astro": {
+    "mtime": 1795511848.4489238,
+    "seen": 1795513807.812167,
+    "ast_hash": "7232c3cf937ceebd21cd4921334d2984",
+    "semantic_hash": "7232c3cf937ceebd21cd4921334d2984"
+  },
+  "src/pages/design-system.astro": {
+    "mtime": 1794574578.784622,
+    "seen": 1795513807.81217,
+    "ast_hash": "98877905a6abfbaf0c54ba25fd4801b9",
+    "semantic_hash": "98877905a6abfbaf0c54ba25fd4801b9"
+  },
+  "src/pages/product/[...lang]/about.astro": {
+    "mtime": 1794566014.7389147,
+    "seen": 1795513807.812174,
+    "ast_hash": "a808085a54600861d536817ae222a43e",
+    "semantic_hash": "a808085a54600861d536817ae222a43e"
+  },
+  "src/pages/product/[...lang]/cases/[slug].astro": {
+    "mtime": 1794573531.706695,
+    "seen": 1795513807.812177,
+    "ast_hash": "335225a5e0579a280d54293564dab4cf",
+    "semantic_hash": "335225a5e0579a280d54293564dab4cf"
+  },
+  "src/pages/product/[...lang]/cases/index.astro": {
+    "mtime": 1794566014.7460585,
+    "seen": 1795513807.812181,
+    "ast_hash": "ca1d061ac3a93d31e9b3e0fe77f32acf",
+    "semantic_hash": "ca1d061ac3a93d31e9b3e0fe77f32acf"
+  },
+  "src/pages/product/[...lang]/contacts.astro": {
+    "mtime": 1794566014.736162,
+    "seen": 1795513807.812185,
+    "ast_hash": "178415ef0cfcf5fc16c09a6c46be35db",
+    "semantic_hash": "178415ef0cfcf5fc16c09a6c46be35db"
+  },
+  "src/pages/product/[...lang]/index.astro": {
+    "mtime": 1795511422.8454654,
+    "seen": 1795513807.812188,
+    "ast_hash": "a1937b460ee37c31eef85b838c36933f",
+    "semantic_hash": "a1937b460ee37c31eef85b838c36933f"
+  },
+  "src/site.ts": {
+    "mtime": 1794573531.707202,
+    "seen": 1795513807.812192,
+    "ast_hash": "c1be22f69b15b04d760b54e18ea1662e",
+    "semantic_hash": "c1be22f69b15b04d760b54e18ea1662e"
+  },
+  "tsconfig.json": {
+    "mtime": 1794566014.6732438,
+    "seen": 1795513807.812195,
+    "ast_hash": "0c58849564366d2a0d9795d0b716e13f",
+    "semantic_hash": "0c58849564366d2a0d9795d0b716e13f"
+  },
+  "README.md": {
+    "mtime": 1794573531.6208522,
+    "seen": 1795513807.8121989,
+    "ast_hash": "7c66766ed655484cc24c25c104433fae",
+    "semantic_hash": "7c66766ed655484cc24c25c104433fae"
+  },
+  "public/fonts/OFL.txt": {
+    "mtime": 1794566014.8476415,
+    "seen": 1795513807.812202,
+    "ast_hash": "8b470a9a7d9b968e7c1fbfa7e20c73f7",
+    "semantic_hash": "8b470a9a7d9b968e7c1fbfa7e20c73f7"
+  },
+  "public/robots.txt": {
+    "mtime": 1794566014.8286417,
+    "seen": 1795513807.812206,
+    "ast_hash": "b37fe60e7a6347dcc5ad4fe63f441c02",
+    "semantic_hash": "b37fe60e7a6347dcc5ad4fe63f441c02"
+  },
+  "src/content/cases/fintech-onboarding/en.md": {
+    "mtime": 1794566014.8051746,
+    "seen": 1795513807.8122098,
+    "ast_hash": "0f856a05a6f0938550a41b8c2f0bc90d",
+    "semantic_hash": "0f856a05a6f0938550a41b8c2f0bc90d"
+  },
+  "src/content/cases/fintech-onboarding/kk.md": {
+    "mtime": 1794566014.8205655,
+    "seen": 1795513807.812216,
+    "ast_hash": "0aff233dfd8463bcfcaf9f48777253e0",
+    "semantic_hash": "0aff233dfd8463bcfcaf9f48777253e0"
+  },
+  "src/content/cases/fintech-onboarding/ru.md": {
+    "mtime": 1794566014.8156054,
+    "seen": 1795513807.812219,
+    "ast_hash": "6323c76f9a389c797cc3c2b3ae199524",
+    "semantic_hash": "6323c76f9a389c797cc3c2b3ae199524"
+  },
+  "src/content/cases/seller-dashboard/en.md": {
+    "mtime": 1794566014.783817,
+    "seen": 1795513807.812223,
+    "ast_hash": "944d93aebd474a8a2d698a0bcd60af60",
+    "semantic_hash": "944d93aebd474a8a2d698a0bcd60af60"
+  },
+  "src/content/cases/seller-dashboard/kk.md": {
+    "mtime": 1794566014.799771,
+    "seen": 1795513807.812226,
+    "ast_hash": "7dc875a3b71f68601305f1303fe16a49",
+    "semantic_hash": "7dc875a3b71f68601305f1303fe16a49"
+  },
+  "src/content/cases/seller-dashboard/ru.md": {
+    "mtime": 1794566014.7941895,
+    "seen": 1795513807.8122299,
+    "ast_hash": "7b2c2635c055afdfe0468f0489650c75",
+    "semantic_hash": "7b2c2635c055afdfe0468f0489650c75"
+  }
+}
