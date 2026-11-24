@@ -7,8 +7,8 @@ const { lang, heading: Heading = 'h2' } = Astro.props;
 const { title = t(lang).contacts.blockTitle, lead = t(lang).contacts.lead } = Astro.props;
 ---
 <div class="contact">
-  <Heading class="contact__title">{title}</Heading>
-  <p class="contact__lead">{lead}</p>
+  <Heading class="contact__title reveal">{title}</Heading>
+  <p class="contact__lead reveal reveal--d1">{lead}</p>
   <ul class="contact__list">
     <li><Link href={contacts.telegram}>Telegram</Link></li>
     <li><Link href={contacts.whatsapp}>WhatsApp</Link></li>

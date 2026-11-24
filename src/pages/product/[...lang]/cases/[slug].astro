@@ -27,8 +27,8 @@ const { Content } = await render(entry);
     <Container>
       <header class="case-head">
         <Link href={localize(lang, '/cases/')}>← {s.cases.back}</Link>
-        <h1>{d.title}</h1>
-        <p class="case-lead">{d.summary}</p>
+        <h1 class="reveal-load">{d.title}</h1>
+        <p class="case-lead reveal-load reveal--d1">{d.summary}</p>
         <dl class="case-facts">
           <div><dt>{s.cases.company}</dt><dd>{d.company}</dd></div>
           <div><dt>{s.cases.role}</dt><dd>{d.role}</dd></div>
@@ -36,7 +36,7 @@ const { Content } = await render(entry);
         </dl>
         {d.tags.length > 0 && <div class="case-tags">{d.tags.map((tag) => <Tag>{tag}</Tag>)}</div>}
       </header>
-      <Picture src={d.cover} alt={d.coverAlt} formats={['avif', 'webp']} widths={[480, 960, 1440]} sizes="(min-width: 72rem) 68rem, 100vw" loading="eager" fetchpriority="high" class="case-cover" />
+      <Picture src={d.cover} alt={d.coverAlt} formats={['avif', 'webp']} pictureAttributes={{ class: 'reveal' }} widths={[480, 960, 1440]} sizes="(min-width: 72rem) 68rem, 100vw" loading="eager" fetchpriority="high" class="case-cover" />
     </Container>
     {d.metrics.length > 0 && (
       <Section title={s.cases.results}>

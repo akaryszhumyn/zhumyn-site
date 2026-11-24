@@ -10,6 +10,7 @@ const d = entry.data;
 <article class="case-card">
   <a class="case-card__link" href={localize(lang, `/cases/${entry.slug}/`)}>
     <Picture
+      pictureAttributes={{ class: 'reveal' }}
       class="case-card__cover"
       src={d.cover}
       alt={d.coverAlt}

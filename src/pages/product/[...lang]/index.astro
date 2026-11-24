@@ -14,7 +14,7 @@ const cases = (featured.length ? featured : all).slice(0, 4);
 <Base lang={lang} path="/">
   <Hero portrait eyebrow={s.home.eyebrow} title={s.home.title} lead={s.home.lead}>
     <Button href={localize(lang, '/cases/')}>{s.home.ctaCases}</Button>
-    <Button href={localize(lang, '/contacts/')} variant="secondary">{s.home.ctaContact}</Button>
+    <Button href={localize(lang, '/contacts/')} variant="secondary" icon="none">{s.home.ctaContact}</Button>
   </Hero>
   <Section title={s.home.casesTitle}>
     <Grid min="26rem">

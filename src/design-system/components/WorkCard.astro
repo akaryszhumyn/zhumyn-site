@@ -9,6 +9,7 @@ const { work, lang, eager = false } = Astro.props;
 <article class="work">
   <a class="work__link" href={work.url} target="_blank" rel="noopener">
     <Picture
+      pictureAttributes={{ class: 'reveal' }}
       src={work.cover}
       alt={work.company}
       formats={['avif', 'webp']}

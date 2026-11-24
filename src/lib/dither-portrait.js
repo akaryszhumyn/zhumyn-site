@@ -9,14 +9,21 @@
  *
  * Облегчённая версия оригинала (визуально тот же эффект):
  *  - ближайший сосед вместо билинейной выборки, индексы столбцов/строк считаются один раз;
- *  - пустой фон (R и G почти 0) пропускается без вычислений, это около половины клеток;
+ *  - пустой фон (R и G почти 0) пропускается без вычислений;
  *  - запись пикселя одним 32-битным числом, а не четырьмя байтами;
  *  - холст в 1x (CSS-пиксели), на ретине его растягивает браузер без сглаживания;
- *  - клетка крупнее (~S/300 вместо S/400), примерно в 2 раза меньше клеток;
+ *  - клетка крупнее (~S/300 вместо S/400);
  *  - в покое (интро закончилось, курсор вне портрета, нет прокрутки) перерисовка 20 кадров/с;
  *  - при prefers-reduced-motion рисуем один кадр и останавливаемся.
+ * Сетка точек покрывает весь контейнер, а не только квадрат портрета: поэтому волна от клика
+ * расходится по всей панели и нигде не обрезается.
  */
 const clamp01 = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
+
+// Где в квадрате тон-карты на самом деле лицо (измерено по картинке), доли стороны.
+// По ним портрет центрируется по видимому лицу, а не по краю картинки.
+const SUBJ = { t: 0.052, b: 0.948, l: 0.238, r: 0.763 };
+const PAD_BOTTOM = 0.09; // узкая раскладка, портрет внизу: отступ под лицом в долях S
 
 // Bayer 4x4 threshold matrix
 const BAYER = new Float32Array(16);
@@ -45,10 +52,10 @@ export class DitherPortrait {
    * @param {string}  options.src            URL of the tone-map PNG (required)
    * @param {string}  [options.color='#fff'] colour of the lit pixels (background stays transparent)
    * @param {'auto'|'right'|'left'|'center'} [options.align='auto']  auto = right on wide containers, center on narrow
+   * @param {'top'|'bottom'} [options.valign='top']  narrow layout only: portrait at the top or at the bottom of the container
    * @param {number}  [options.scale=1]      portrait size multiplier
    * @param {number}  [options.offsetX=0]    px shift
    * @param {number}  [options.offsetY=0]    px shift
-   * @param {'top'|'bottom'} [options.valign='top']  narrow layout only: portrait at the top or at the bottom of the container
    * @param {number}  [options.pixel=0]      dither pixel size in CSS px (0 = automatic)
    * @param {HTMLElement} [options.scrollTarget]  element whose scroll-through drives the dissolve (default: container)
    * @param {number}  [options.scrollRange=0.7]   dissolve completes after scrolling this fraction of scrollTarget's height
@@ -82,7 +89,7 @@ export class DitherPortrait {
 
     this.RES = 768;
     this.T = this.L = null;
-    this.n = 0; this.imgd = null; this.px32 = null;
+    this.nx = this.ny = 0; this.imgd = null; this.px32 = null; this._gk = ''; this._outside = false;
     this.W = this.H = this.S = this.OX = this.OY = 0; this.baseCell = 3;
     this.progress = 0; this.manualProgress = null; this._pDrawn = -1; this._full = false;
     this.mouse = { u: -9, v: -9, on: false, sm: 0 };
@@ -148,11 +155,19 @@ export class DitherPortrait {
     this.cv.width = Math.max(1, Math.round(this.W));
     this.cv.height = Math.max(1, Math.round(this.H));
     const { W, H } = this, wide = W > 760, o = this.o;
-    const S = (wide ? Math.min(H * 0.98, W * 0.62) : Math.min(W * 1.15, H * 0.78)) * o.scale;
+    // Широкая раскладка: лицо по центру по вертикали, отступ сверху = снизу = справа
+    const S = (wide ? Math.min(H * 0.87, W * 0.55) : Math.min(W * 1.15, H * 0.78)) * o.scale;
     const align = o.align === 'auto' ? (wide ? 'right' : 'center') : o.align;
     this.S = S;
-    this.OX = (align === 'right' ? W - S * 0.94 : align === 'left' ? -S * 0.06 : (W - S) / 2) + o.offsetX;
-    this.OY = (wide ? (H - S) / 2 + H * 0.05 : o.valign === 'bottom' ? H - S * 0.97 : H * 0.08) + o.offsetY;
+    if (wide) {
+      const m = (H - S * (SUBJ.b - SUBJ.t)) / 2;
+      this.OY = m - S * SUBJ.t;
+      this.OX = align === 'right' ? W - m - S * SUBJ.r : align === 'left' ? m - S * SUBJ.l : (W - S) / 2;
+    } else {
+      this.OX = (W - S) / 2;
+      this.OY = o.valign === 'bottom' ? H - S * PAD_BOTTOM - S * SUBJ.b : H * 0.08;
+    }
+    this.OX += o.offsetX; this.OY += o.offsetY;
     this.baseCell = o.pixel || Math.max(2, Math.round(S / 300));
     this._pDrawn = -1; // размер сменился: нужен перерисованный кадр
     this._sync();
@@ -191,22 +206,33 @@ export class DitherPortrait {
     if (!run && this.raf) { cancelAnimationFrame(this.raf); this.raf = 0; }
   }
 
-  /** Таблицы под текущую сетку n×n: считаются один раз, пока n не изменился. */
-  _grid(n) {
-    const RES = this.RES;
-    this.n = n;
-    this.oc.width = this.oc.height = n;
-    this.imgd = this.octx.createImageData(n, n);
-    this.px32 = new Uint32Array(this.imgd.data.buffer);
-    this.us = new Float32Array(n); this.ix = new Int32Array(n); this.rb = new Int32Array(n);
-    for (let k = 0; k < n; k++) {
-      const c = (k + 0.5) / n;
-      this.us[k] = c;
-      const i = Math.min(RES - 1, (c * RES) | 0);
-      this.ix[k] = i; this.rb[k] = i * RES;
+  /** Сетка клеток на весь контейнер. Таблицы считаются заново, только если что-то из размеров изменилось. */
+  _grid(cell) {
+    const { W, H, OX, OY, S, RES } = this;
+    const key = cell + '|' + W + '|' + H + '|' + OX + '|' + OY + '|' + S;
+    if (key === this._gk) return;
+    this._gk = key;
+    this._outside = true; // сетка или положение сменились: следующий кадр обнулит всё вне области портрета
+    const nx = Math.max(1, Math.ceil(W / cell)), ny = Math.max(1, Math.ceil(H / cell));
+    if (nx !== this.nx || ny !== this.ny) {
+      this.nx = nx; this.ny = ny;
+      this.oc.width = nx; this.oc.height = ny;
+      this.imgd = this.octx.createImageData(nx, ny);
+      this.px32 = new Uint32Array(this.imgd.data.buffer);
+      this.ux = new Float32Array(nx); this.ixs = new Int32Array(nx);
+      this.vy = new Float32Array(ny); this.rbs = new Int32Array(ny);
     }
-    this.hs = new Float32Array(n * n);
-    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) this.hs[y * n + x] = hash(x, y);
+    // u, v: координаты клетки в системе квадрата портрета (0..1 внутри картинки); -1 = клетка вне картинки
+    for (let x = 0; x < nx; x++) {
+      const u = ((x + 0.5) * cell - OX) / S;
+      this.ux[x] = u;
+      this.ixs[x] = u >= 0 && u < 1 ? Math.min(RES - 1, (u * RES) | 0) : -1;
+    }
+    for (let y = 0; y < ny; y++) {
+      const v = ((y + 0.5) * cell - OY) / S;
+      this.vy[y] = v;
+      this.rbs[y] = v >= 0 && v < 1 ? Math.min(RES - 1, (v * RES) | 0) * RES : -1;
+    }
   }
 
   _frame(now) {
@@ -228,29 +254,44 @@ export class DitherPortrait {
     this._last = now; this._pDrawn = p; if (prog >= 1) this._full = true;
 
     const cell = Math.max(this.baseCell, Math.round(this.baseCell * (1 + p * p * 14)));
-    const nn = Math.max(1, Math.ceil(this.S / cell));
-    if (nn !== this.n) this._grid(nn);
-    const n = this.n, px32 = this.px32, col32 = this.col32, us = this.us, ix = this.ix, rb = this.rb, hs = this.hs;
+    this._grid(cell);
+    const nx = this.nx, ny = this.ny, px32 = this.px32, col32 = this.col32, ux = this.ux, ixs = this.ixs, vy = this.vy, rbs = this.rbs;
     const fade = Math.pow(1 - p, 1.3);
     m.sm += ((m.on ? 1 : 0) - m.sm) * 0.09;
     const mu = m.u, mv = m.v, ms = m.sm, R2 = 0.17 * 0.17;
     const breathe = this.reduce ? 1 : 1 + 0.035 * Math.sin(t * 0.9);
     const T = this.T, L = this.L;
 
+    // Область расчёта: обычно только квадрат портрета; на всю панель расширяемся, пока идёт волна от клика
+    let x0 = 0, x1 = nx, y0 = 0, y1 = ny;
+    if (np === 0) {
+      x0 = Math.max(0, Math.floor(this.OX / cell)); x1 = Math.min(nx, Math.ceil((this.OX + this.S) / cell));
+      y0 = Math.max(0, Math.floor(this.OY / cell)); y1 = Math.min(ny, Math.ceil((this.OY + this.S) / cell));
+      if (this._outside) { px32.fill(0); this._outside = false; } // волна закончилась: убираем её следы вне портрета
+    } else this._outside = true;
+
+    // Кольца волны: считаем заранее, чтобы в клетках вне кольца не делать sqrt и exp
+    const rg = [];
+    for (let k = 0; k < np; k++) {
+      const q = pl[k], age = (nowMs - q.t) / 1000, R = age * 0.55, hi = R + 0.14, lo = Math.max(0, R - 0.14);
+      rg.push({ u: q.u, v: q.v, R, lo2: lo * lo, hi2: hi * hi, decay: Math.exp(-age * 1.7), dy2: 0 });
+    }
+
     if (fade <= 0.002) {
       this.ctx.clearRect(0, 0, this.W, this.H); // портрет полностью растворился
     } else {
-      for (let cy = 0; cy < n; cy++) {
-        const v = us[cy], base = rb[cy], bayerRow = (cy & 3) << 2;
-        let i = cy * n;
-        for (let cx = 0; cx < n; cx++, i++) {
-          const idx = base + ix[cx];
-          let val = T[idx];
-          const lit = L[idx];
+      for (let cy = y0; cy < y1; cy++) {
+        const v = vy[cy], rb = rbs[cy], bayerRow = (cy & 3) << 2;
+        for (let k = 0; k < np; k++) { const dy = v - rg[k].v; rg[k].dy2 = dy * dy; }
+        let i = cy * nx + x0;
+        for (let cx = x0; cx < x1; cx++, i++) {
+          const ix = ixs[cx];
+          let val = 0, lit = 0;
+          if (rb >= 0 && ix >= 0) { const idx = rb + ix; val = T[idx]; lit = L[idx]; }
           // пустой фон: ни основной тон, ни «поднятые тени»; светиться может только кольцо от клика
-          if (val < 0.004 && lit < 0.004 && np === 0) { px32[i] = 0; continue; }
-          const u = us[cx];
-          if (ms > 0.01) {
+          if (np === 0 && val < 0.004 && lit < 0.004) { px32[i] = 0; continue; }
+          const u = ux[cx];
+          if (ms > 0.01 && lit > 0) {
             const dx = u - mu, dy = v - mv, r2 = (dx * dx + dy * dy) / R2;
             if (r2 < 5) {
               const f = Math.exp(-r2 * 1.1) * ms;
@@ -258,22 +299,27 @@ export class DitherPortrait {
             }
           }
           for (let k = 0; k < np; k++) {
-            const q = pl[k], age = (nowMs - q.t) / 1000, dx = u - q.u, dy = v - q.v, d = Math.sqrt(dx * dx + dy * dy);
-            const ring = Math.exp(-Math.pow((d - age * 0.55) / 0.035, 2)) * Math.exp(-age * 1.7);
+            const q = rg[k];
+            if (q.dy2 > q.hi2) continue; // вся строка вне кольца
+            const dx = u - q.u, d2 = dx * dx + q.dy2;
+            if (d2 < q.lo2 || d2 > q.hi2) continue; // клетка вне кольца
+            const e = (Math.sqrt(d2) - q.R) / 0.035;
+            const ring = Math.exp(-e * e) * q.decay;
             if (ring > 0.01) val += ring * (0.25 + lit * 0.9);
           }
+          if (val <= 0) { px32[i] = 0; continue; }
           val *= breathe;
-          if (prog < 1) { const rr = prog * 1.75 - ((1 - u) * 0.85 + hs[i] * 0.3); val *= rr <= 0 ? 0 : rr >= 0.3334 ? 1 : rr * 3; }
+          if (prog < 1) { const rr = prog * 1.75 - ((1 - u) * 0.85 + hash(cx, cy) * 0.3); val *= rr <= 0 ? 0 : rr >= 0.3334 ? 1 : rr * 3; }
           val *= fade;
           px32[i] = val > BAYER[bayerRow | (cx & 3)] ? col32 : 0;
         }
       }
-      this.octx.putImageData(this.imgd, 0, 0);
+      // грузим на холст только посчитанную область
+      this.octx.putImageData(this.imgd, 0, 0, x0, y0, x1 - x0, y1 - y0);
       const ctx = this.ctx;
       ctx.clearRect(0, 0, this.W, this.H);
       ctx.imageSmoothingEnabled = false;
-      const sz = n * cell, ox = this.OX + (this.S - sz) / 2, oy = this.OY + (this.S - sz) / 2;
-      ctx.drawImage(this.oc, 0, 0, n, n, Math.round(ox), Math.round(oy), sz, sz);
+      ctx.drawImage(this.oc, x0, y0, x1 - x0, y1 - y0, x0 * cell, y0 * cell, (x1 - x0) * cell, (y1 - y0) * cell);
     }
     this._sync();
   }

@@ -5,7 +5,7 @@ const { title, id } = Astro.props;
 ---
 <section class="section" id={id}>
   <Container>
-    {title && <h2 class="section__title">{title}</h2>}
+    {title && <h2 class="section__title reveal">{title}</h2>}
     <slot />
   </Container>
 </section>

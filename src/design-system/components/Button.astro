@@ -1,19 +1,21 @@
 ---
 // Кнопка: подпись и квадратная плитка с точечной иконкой (как на старом сайте).
 // Для внешних ссылок (http…) иконка «звено» и открытие в новой вкладке, иначе стрелка.
-interface Props { href?: string; variant?: 'primary' | 'secondary'; type?: 'button' | 'submit' }
-const { href, variant = 'primary', type = 'button' } = Astro.props;
+interface Props { href?: string; variant?: 'primary' | 'secondary'; type?: 'button' | 'submit'; icon?: 'auto' | 'arrow' | 'link' | 'none' }
+const { href, variant = 'primary', type = 'button', icon = 'auto' } = Astro.props;
 const Tag = href ? 'a' : 'button';
 const external = !!href && /^https?:/.test(href);
+// auto: у внешней ссылки «звено», у остальных стрелка; none: кнопка без плитки
+const kind = icon === 'auto' ? (external ? 'link' : 'arrow') : icon;
 ---
 <Tag
-  class:list={['btn', `btn--${variant}`, { 'btn--external': external }]}
+  class:list={['btn', `btn--${variant}`, { 'btn--link': kind === 'link', 'btn--plain': kind === 'none' }]}
   href={href}
   type={href ? undefined : type}
   {...(external ? { target: '_blank', rel: 'noopener' } : {})}
 >
   <span class="btn__label"><slot /></span>
-  <span class="btn__icon" aria-hidden="true"></span>
+  {kind !== 'none' && <span class="btn__icon" aria-hidden="true"></span>}
 </Tag>
 <style>
   .btn {
@@ -24,7 +26,9 @@ const external = !!href && /^https?:/.test(href);
     text-decoration: none; cursor: pointer; border: 0;
     transition: transform var(--duration-fast) var(--ease-out);
   }
-  .btn--external { --icon: url('/icons/link-dots.svg'); }
+  .btn--link { --icon: url('/icons/link-dots.svg'); }
+  /* без плитки: высота та же, что у кнопки с иконкой (0.375rem + 2.5rem + 0.375rem) */
+  .btn--plain { min-height: 3.25rem; padding-right: var(--space-5); }
   .btn:active { transform: scale(0.97); }
   .btn--primary { background: var(--color-text); color: var(--color-bg); --tile: var(--color-bg); --dots: var(--color-text); }
   .btn--secondary { background: var(--color-surface); color: var(--color-text); --tile: var(--color-text); --dots: var(--color-bg); }

@@ -1,7 +1,7 @@
 ---
 // portrait: первый экран-сцена. Тёмная скруглённая панель на высоту окна с отступом по бокам;
 // на ней рисуется портрет (dither-portrait). Панель тёмная в обеих темах, поэтому выглядит одинаково.
-// Широкий экран: текст слева, портрет справа. Узкий: текст и кнопки, а портрет внизу панели.
+// Широкий экран: текст слева, портрет справа по центру панели. Узкий: текст и кнопки, портрет внизу.
 interface Props { eyebrow?: string; title: string; lead?: string; portrait?: boolean }
 const { eyebrow, title, lead, portrait = false } = Astro.props;
 ---
@@ -9,21 +9,25 @@ const { eyebrow, title, lead, portrait = false } = Astro.props;
   {portrait && <div class="hero__zone" aria-hidden="true"></div>}
   <div class="hero__in">
     {eyebrow && <p class="hero__eyebrow">{eyebrow}</p>}
-    <h1 class="hero__title">{title}</h1>
-    {lead && <p class="hero__lead">{lead}</p>}
+    <h1 class="hero__title reveal-load">{title}</h1>
+    {lead && <p class="hero__lead reveal-load reveal--d1">{lead}</p>}
     {Astro.slots.has('default') && <div class="hero__actions"><slot /></div>}
   </div>
 </header>
 <style>
   .hero { padding-block: var(--space-8) var(--space-6); }
-  .hero__in { display: grid; gap: var(--space-5); max-width: 52rem; }
-  .hero__eyebrow { font-size: var(--text-sm); color: var(--color-text-muted); }
-  .hero__title { font-size: var(--text-2xl); }
-  .hero__lead { font-size: var(--text-lg); color: var(--color-text-muted); max-width: 40rem; }
-  .hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+  /* Отступы задаются у самих элементов (а не общим gap), чтобы ритм был ровный: подпись, заголовок, описание, кнопки */
+  .hero__in { max-width: 52rem; }
+  .hero__eyebrow { font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: 1.25rem; }
+  .hero__title { font-size: var(--text-2xl); line-height: 1.06; letter-spacing: -0.035em; }
+  .hero__lead {
+    font-size: clamp(1rem, 0.93rem + 0.25vw, 1.125rem); line-height: 1.55; color: var(--color-text-muted);
+    max-width: 30rem; margin-top: clamp(1.5rem, 1.1rem + 1.2vw, 2.25rem);
+  }
+  .hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: clamp(2rem, 1.5rem + 1.5vw, 3rem); }
 
   .hero--stage {
-    position: relative; overflow: hidden; display: grid; align-items: end;
+    position: relative; overflow: hidden; display: grid; align-items: center;
     margin-inline: var(--stage-inset); padding: var(--space-7) var(--space-6);
     /* на высоту окна: минус шапка и отступ снизу, чтобы край следующего блока подсказывал прокрутку */
     min-height: max(32rem, calc(100svh - var(--header-h) - var(--stage-inset)));
@@ -37,15 +41,15 @@ const { eyebrow, title, lead, portrait = false } = Astro.props;
   .hero--stage :global(.btn--secondary) { background: rgb(255 255 255 / 0.1); }
 
   /* Узкая сцена (панель уже 760px, так решает сам эффект): текст и кнопки сверху, портрет внизу панели.
-     --portrait: размер портрета = 1.15 ширины панели (так его считает эффект). */
+     --portrait: размер портрета = 1.15 ширины панели (так его считает эффект).
+     Под текстом резервируем место под видимое лицо (0.896 S) и отступ под ним (0.09 S), как в эффекте. */
   @media (max-width: 52.5rem) {
     .hero--stage {
       --portrait: calc((100vw - 2 * var(--stage-inset)) * 1.15);
-      min-height: 0;
-      padding: var(--space-6) var(--space-5) calc(var(--portrait) * 0.97 + var(--space-4));
+      min-height: 0; align-items: start;
+      padding: var(--space-6) var(--space-5) calc(var(--portrait) * 0.986 + var(--space-5));
     }
-    .hero--stage .hero__in { max-width: none; gap: var(--space-4); }
-    .hero__lead { font-size: var(--text-md); }
+    .hero--stage .hero__in { max-width: none; }
     .hero__zone { inset: auto 0 0 0; height: var(--portrait); }
   }
 </style>

@@ -32,7 +32,7 @@ const url = (l: Lang) => new URL(localize(l, path, section), Astro.site).href;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="preload" href="/fonts/MedeoSansVariable.woff2" as="font" type="font/woff2" crossorigin />
-    <script is:inline>try{var t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}catch(e){}</script>
+    <script is:inline>document.documentElement.classList.add('js');try{var t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}catch(e){}</script>
     <title>{fullTitle}</title>
     <meta name="description" content={desc} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -59,5 +59,13 @@ const url = (l: Lang) => new URL(localize(l, path, section), Astro.site).href;
     <Header lang={lang} path={path} alternates={alternates} section={section} nav={nav} />
     <main id="main"><slot /></main>
     <Footer lang={lang} />
+    <script>
+      // «Появление из размытия»: показываем элемент, когда он доскроллен до экрана, один раз
+      const io = new IntersectionObserver(
+        (entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } }),
+        { rootMargin: '0px 0px -6% 0px' },
+      );
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+    </script>
   </body>
 </html>

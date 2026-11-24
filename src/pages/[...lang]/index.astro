@@ -31,12 +31,12 @@ const logos = Object.entries(import.meta.glob<{ default: ImageMetadata }>('../..
 ---
 <Base lang={lang} path="/" section={HUB} nav={nav} title={h.metaTitle} description={h.description}>
   <Hero portrait eyebrow={h.hero.eyebrow} title={h.hero.title} lead={h.hero.lead}>
-    <Button href={contacts.telegram}>{h.hero.talk}</Button>
-    <Button href={`${home}#works`} variant="secondary">{h.hero.works}</Button>
+    <Button href={contacts.telegram} icon="arrow">{h.hero.talk}</Button>
+    <Button href={`${home}#works`} variant="secondary" icon="none">{h.hero.works}</Button>
   </Hero>
 
   <Section id="works" title={h.works.title}>
-    <p class="count">{h.works.count}</p>
+    <p class="count reveal reveal--d1">{h.works.count}</p>
     <Grid min="26rem">
       {works.map((w, i) => <WorkCard work={w} lang={lang} eager={i < 2} />)}
     </Grid>
@@ -45,8 +45,8 @@ const logos = Object.entries(import.meta.glob<{ default: ImageMetadata }>('../..
   <Section id="services">
     <div class="panel">
       <header class="panel__head">
-        <h2>{h.services.title}</h2>
-        <p>{h.services.lead}</p>
+        <h2 class="reveal">{h.services.title}</h2>
+        <p class="reveal reveal--d1">{h.services.lead}</p>
       </header>
       <ul class="svc-list">
         {h.services.items.map((s, i) => (
@@ -75,10 +75,10 @@ const logos = Object.entries(import.meta.glob<{ default: ImageMetadata }>('../..
 
   <Section id="about" title={h.about.title}>
     <div class="about">
-      <Picture src={avatar} alt={h.name} formats={['avif', 'webp']} widths={[160, 320]} sizes="10rem" class="about__photo" />
+      <Picture src={avatar} alt={h.name} formats={['avif', 'webp']} widths={[160, 320]} sizes="10rem" class="about__photo" pictureAttributes={{ class: 'reveal' }} />
       <div>
-        <p class="about__greeting">{h.about.greeting}</p>
-        <p class="about__years">{h.about.years}</p>
+        <p class="about__greeting reveal">{h.about.greeting}</p>
+        <p class="about__years reveal reveal--d1">{h.about.years}</p>
       </div>
     </div>
   </Section>

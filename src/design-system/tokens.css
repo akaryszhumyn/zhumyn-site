@@ -38,7 +38,7 @@
   --text-md: 1.0625rem;
   --text-lg: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
   --text-xl: clamp(1.625rem, 1.25rem + 1.6vw, 2.5rem);
-  --text-2xl: clamp(1.75rem, 1rem + 3.6vw, 4rem);
+  --text-2xl: clamp(1.75rem, 1rem + 3.6vw, 3.25rem);
   --leading-tight: 1.1;
   --leading-normal: 1.55;
   --weight-regular: 400;
@@ -56,7 +56,7 @@
   --space-8: clamp(4rem, 2.5rem + 5vw, 8rem);
 
   /* Сетка */
-  --header-h: calc(4.25rem + 1px); /* строка шапки + рамка */
+  --header-h: 4.25rem; /* высота строки шапки */
   --stage-inset: 40px; /* боковой отступ первого экрана */
 
   /* Радиусы */
@@ -64,12 +64,12 @@
      tag      метки, чипы (высота до ~32px)
      control  кнопки, переключатели, выбор языка, кнопка меню, мелкие плитки (высота 40–120px)
      card     карточки, строки услуг, обложки, фото, контактный блок, выезжающее меню (крупные)
-     Радиус не больше ~40% высоты элемента, иначе кнопка 44px превращается в круг или таблетку.
+     Радиус не больше ~45% высоты элемента, иначе кнопка 44px превращается в круг или таблетку.
      Вложенный объект: радиус внешнего минус отступ между ними, тогда углы идут «параллельно»:
      calc(var(--radius-card) - var(--space-3)) */
-  --radius-tag: 10px;
-  --radius-control: 18px;
-  --radius-card: 40px;
+  --radius-tag: 12px;
+  --radius-control: 20px;
+  --radius-card: 48px;
 
   /* Тени */
   --shadow-sm: 0 1px 2px light-dark(rgb(10 10 10 / 0.06), rgb(0 0 0 / 0.4));
@@ -93,7 +93,7 @@
 :root[data-theme='dark'] { color-scheme: dark; }
 
 @media (max-width: 48rem) {
-  :root { --header-h: calc(5rem + 1px); --stage-inset: 20px; }
+  :root { --header-h: 5rem; --stage-inset: 20px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -102,6 +102,26 @@
     --duration-base: 0ms;
     --duration-slow: 0ms;
   }
+}
+
+/* Появление из размытия: только заголовки, подзаголовки и фото.
+   .reveal: когда блок доскроллили до экрана (скрыт только при живом JS, класс html.js ставит скрипт в <head>);
+   .reveal-load: то, что видно сразу при открытии страницы (чистый CSS, без ожидания скриптов). */
+@keyframes reveal-in {
+  from { opacity: 0; filter: blur(14px); transform: translateY(0.6rem); }
+  to { opacity: 1; filter: blur(0); transform: none; }
+}
+.reveal-load { animation: reveal-in 0.8s var(--ease-out) both; animation-delay: var(--reveal-delay, 0s); }
+.js .reveal {
+  opacity: 0; filter: blur(14px); transform: translateY(0.6rem); display: block;
+  transition: opacity 0.9s var(--ease-out), filter 0.9s var(--ease-out), transform 0.9s var(--ease-out);
+  transition-delay: var(--reveal-delay, 0s);
+}
+.js .reveal.is-in { opacity: 1; filter: blur(0); transform: none; }
+.reveal--d1 { --reveal-delay: 0.12s; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal-load { animation: none; }
+  .js .reveal { opacity: 1; filter: none; transform: none; transition: none; }
 }
 
 /* Якоря (#works и т.д.) не прячутся под липкой шапкой */
