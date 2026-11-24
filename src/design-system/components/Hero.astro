@@ -1,17 +1,52 @@
 ---
-interface Props { eyebrow?: string; title: string; lead?: string }
-const { eyebrow, title, lead } = Astro.props;
+// portrait: первый экран-сцена. Тёмная скруглённая панель на высоту окна с отступом по бокам;
+// на ней рисуется портрет (dither-portrait). Панель тёмная в обеих темах, поэтому выглядит одинаково.
+interface Props { eyebrow?: string; title: string; lead?: string; portrait?: boolean }
+const { eyebrow, title, lead, portrait = false } = Astro.props;
 ---
-<header class="hero">
-  {eyebrow && <p class="hero__eyebrow">{eyebrow}</p>}
-  <h1 class="hero__title">{title}</h1>
-  {lead && <p class="hero__lead">{lead}</p>}
-  {Astro.slots.has('default') && <div class="hero__actions"><slot /></div>}
+<header class:list={['hero', { 'hero--stage': portrait }]} data-portrait={portrait ? '' : undefined}>
+  <div class="hero__in">
+    {eyebrow && <p class="hero__eyebrow">{eyebrow}</p>}
+    <h1 class="hero__title">{title}</h1>
+    {lead && <p class="hero__lead">{lead}</p>}
+    {Astro.slots.has('default') && <div class="hero__actions"><slot /></div>}
+  </div>
 </header>
 <style>
-  .hero { padding-block: var(--space-8) var(--space-6); display: grid; gap: var(--space-5); max-width: 52rem; }
+  .hero { padding-block: var(--space-8) var(--space-6); }
+  .hero__in { display: grid; gap: var(--space-5); max-width: 52rem; }
   .hero__eyebrow { font-size: var(--text-sm); color: var(--color-text-muted); }
   .hero__title { font-size: var(--text-2xl); }
   .hero__lead { font-size: var(--text-lg); color: var(--color-text-muted); max-width: 40rem; }
   .hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+
+  .hero--stage {
+    position: relative; overflow: hidden; display: grid; align-items: end;
+    margin-inline: var(--stage-inset); padding: var(--space-7) var(--space-6);
+    /* на высоту окна: минус шапка и отступ снизу, чтобы край следующего блока подсказывал прокрутку */
+    min-height: max(32rem, calc(100svh - var(--header-h) - var(--stage-inset)));
+    background: var(--color-panel); border-radius: var(--radius-card);
+  }
+  /* Внутри панели палитра всегда тёмная: кнопки и текст сами становятся светлыми (light-dark() смотрит на color-scheme) */
+  .hero--stage .hero__in { position: relative; color-scheme: dark; color: var(--color-text); max-width: min(38rem, 52%); }
+  /* вторая кнопка иначе сливается с панелью (тот же цвет поверхности) */
+  .hero--stage :global(.btn--secondary) { background: rgb(255 255 255 / 0.1); }
+  /* Узкая сцена (панель уже 760px, так решает сам эффект): портрет сверху, текст под ним.
+     Высота под портрет = 1.15 ширины панели (так он считает размер) + запас. */
+  @media (max-width: 52.5rem) {
+    .hero--stage { padding: calc((100vw - 2 * var(--stage-inset)) * 1.15 + 4.5rem) var(--space-5) var(--space-5); }
+    .hero--stage .hero__in { max-width: none; }
+  }
 </style>
+<script>
+  // Портрет подгружаем, когда браузер свободен: текст и кнопки появляются сразу, эффект позже и отдельным файлом
+  const stage = document.querySelector<HTMLElement>('[data-portrait]');
+  if (stage) {
+    const start = async () => {
+      // @ts-ignore: у js-модуля нет типов
+      const { DitherPortrait } = await import('../../lib/dither-portrait.js');
+      new DitherPortrait(stage, { src: '/dither-portrait.png', color: '#ffffff' });
+    };
+    'requestIdleCallback' in window ? requestIdleCallback(start, { timeout: 1500 }) : setTimeout(start, 300);
+  }
+</script>

@@ -2,7 +2,7 @@
 import { Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import Base from '../../layouts/Base.astro';
-import { Button, Card, ContactBlock, Container, Grid, Hero, Link, Section, Tag, WorkCard } from '../../design-system';
+import { Button, Card, ContactBlock, Grid, Hero, Section, Tag, WorkCard } from '../../design-system';
 import { HUB, langPaths, localize, t, type Lang } from '../../i18n';
 import { works } from '../../data/works';
 import { contacts } from '../../site';
@@ -22,7 +22,6 @@ const nav = [
   { href: `${home}#works`, label: h.nav.works },
   { href: `${home}#services`, label: h.nav.services },
   { href: `${home}#about`, label: h.nav.about },
-  { href: localize(lang), label: h.nav.product },
 ];
 
 // Логотипы клиентов: все svg из src/assets/clients в порядке имён файлов (01-, 02-, …)
@@ -31,12 +30,10 @@ const logos = Object.entries(import.meta.glob<{ default: ImageMetadata }>('../..
   .map(([path, m]) => ({ name: path.split('/').pop()!.replace(/^\d+-|\.svg$/g, ''), src: m.default.src }));
 ---
 <Base lang={lang} path="/" section={HUB} nav={nav} title={h.metaTitle} description={h.description}>
-  <Container>
-    <Hero eyebrow={h.hero.eyebrow} title={h.hero.title} lead={h.hero.lead}>
-      <Button href={contacts.telegram}>{h.hero.talk}</Button>
-      <Button href={`${home}#works`} variant="secondary">{h.hero.works}</Button>
-    </Hero>
-  </Container>
+  <Hero portrait eyebrow={h.hero.eyebrow} title={h.hero.title} lead={h.hero.lead}>
+    <Button href={contacts.telegram}>{h.hero.talk}</Button>
+    <Button href={`${home}#works`} variant="secondary">{h.hero.works}</Button>
+  </Hero>
 
   <Section id="works" title={h.works.title}>
     <p class="count">{h.works.count}</p>
@@ -58,7 +55,6 @@ const logos = Object.entries(import.meta.glob<{ default: ImageMetadata }>('../..
             <div class="svc__text">
               <h3>{s.title}</h3>
               <p>{s.text}</p>
-              {i === 2 && <Link href={localize(lang)}>{h.services.productLink} →</Link>}
             </div>
             <ul class="svc__tags">{s.tags.map((tag) => <li>{tag}</li>)}</ul>
           </li>

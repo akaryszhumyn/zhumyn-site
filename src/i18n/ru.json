@@ -88,8 +88,7 @@
     "nav": {
       "works": "Работы",
       "services": "Услуги",
-      "about": "Обо мне",
-      "product": "Product Design"
+      "about": "Обо мне"
     },
     "hero": {
       "eyebrow": "Акарыс Жумын · 7+ лет опыта в дизайне",
@@ -106,7 +105,6 @@
     "services": {
       "title": "Услуги",
       "lead": "От идеи до реализации",
-      "productLink": "Портфолио Product Design",
       "items": [
         {
           "title": "Веб & Digital",

@@ -58,6 +58,8 @@
   /* Сетка */
   --container: 72rem;
   --gutter: clamp(1.25rem, 0.5rem + 3vw, 3rem);
+  --header-h: calc(4.25rem + 1px); /* строка шапки + рамка */
+  --stage-inset: 40px; /* боковой отступ первого экрана */
 
   /* Радиусы */
   /* Правило: объекты одного вида и размера всегда берут один и тот же токен.
@@ -91,6 +93,10 @@
 /* Ручной выбор темы (см. ThemeToggle) */
 :root[data-theme='light'] { color-scheme: light; }
 :root[data-theme='dark'] { color-scheme: dark; }
+
+@media (max-width: 48rem) {
+  :root { --header-h: calc(5rem + 1px); --stage-inset: 20px; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   :root {

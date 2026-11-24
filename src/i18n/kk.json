@@ -88,8 +88,7 @@
     "nav": {
       "works": "Жұмыстарым",
       "services": "Қызметтер",
-      "about": "Мен жайлы",
-      "product": "Product Design"
+      "about": "Мен жайлы"
     },
     "hero": {
       "eyebrow": "Ақарыс Жұмын · дизайнда 7+ жыл тәжірибе",
@@ -106,7 +105,6 @@
     "services": {
       "title": "Қызметтер",
       "lead": "Идеядан іске асыруға дейін",
-      "productLink": "Product Design портфолиосы",
       "items": [
         {
           "title": "Веб & Диджитал",

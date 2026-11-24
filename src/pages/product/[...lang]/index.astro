@@ -1,6 +1,6 @@
 ---
 import Base from '../../../layouts/Base.astro';
-import { Button, CaseCard, Container, ContactBlock, Grid, Hero, Section } from '../../../design-system';
+import { Button, CaseCard, ContactBlock, Grid, Hero, Section } from '../../../design-system';
 import { langPaths, localize, t, type Lang } from '../../../i18n';
 import { getCases } from '../../../lib/cases';
 
@@ -12,12 +12,10 @@ const featured = all.filter((c) => c.data.featured);
 const cases = (featured.length ? featured : all).slice(0, 4);
 ---
 <Base lang={lang} path="/">
-  <Container>
-    <Hero eyebrow={s.home.eyebrow} title={s.home.title} lead={s.home.lead}>
-      <Button href={localize(lang, '/cases/')}>{s.home.ctaCases}</Button>
-      <Button href={localize(lang, '/contacts/')} variant="secondary">{s.home.ctaContact}</Button>
-    </Hero>
-  </Container>
+  <Hero portrait eyebrow={s.home.eyebrow} title={s.home.title} lead={s.home.lead}>
+    <Button href={localize(lang, '/cases/')}>{s.home.ctaCases}</Button>
+    <Button href={localize(lang, '/contacts/')} variant="secondary">{s.home.ctaContact}</Button>
+  </Hero>
   <Section title={s.home.casesTitle}>
     <Grid min="26rem">
       {cases.map((c, i) => <CaseCard entry={c} lang={lang} eager={i === 0} />)}
