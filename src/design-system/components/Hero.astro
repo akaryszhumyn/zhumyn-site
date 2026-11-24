@@ -1,10 +1,12 @@
 ---
 // portrait: первый экран-сцена. Тёмная скруглённая панель на высоту окна с отступом по бокам;
 // на ней рисуется портрет (dither-portrait). Панель тёмная в обеих темах, поэтому выглядит одинаково.
+// Широкий экран: текст слева, портрет справа. Узкий: текст и кнопки, а портрет внизу панели.
 interface Props { eyebrow?: string; title: string; lead?: string; portrait?: boolean }
 const { eyebrow, title, lead, portrait = false } = Astro.props;
 ---
 <header class:list={['hero', { 'hero--stage': portrait }]} data-portrait={portrait ? '' : undefined}>
+  {portrait && <div class="hero__zone" aria-hidden="true"></div>}
   <div class="hero__in">
     {eyebrow && <p class="hero__eyebrow">{eyebrow}</p>}
     <h1 class="hero__title">{title}</h1>
@@ -27,26 +29,40 @@ const { eyebrow, title, lead, portrait = false } = Astro.props;
     min-height: max(32rem, calc(100svh - var(--header-h) - var(--stage-inset)));
     background: var(--color-panel); border-radius: var(--radius-card);
   }
+  /* Зона портрета: от неё зависит, когда портрет начинает растворяться при прокрутке */
+  .hero__zone { position: absolute; inset: 0; pointer-events: none; }
   /* Внутри панели палитра всегда тёмная: кнопки и текст сами становятся светлыми (light-dark() смотрит на color-scheme) */
   .hero--stage .hero__in { position: relative; color-scheme: dark; color: var(--color-text); max-width: min(38rem, 52%); }
   /* вторая кнопка иначе сливается с панелью (тот же цвет поверхности) */
   .hero--stage :global(.btn--secondary) { background: rgb(255 255 255 / 0.1); }
-  /* Узкая сцена (панель уже 760px, так решает сам эффект): портрет сверху, текст под ним.
-     Высота под портрет = 1.15 ширины панели (так он считает размер) + запас. */
+
+  /* Узкая сцена (панель уже 760px, так решает сам эффект): текст и кнопки сверху, портрет внизу панели.
+     --portrait: размер портрета = 1.15 ширины панели (так его считает эффект). */
   @media (max-width: 52.5rem) {
-    .hero--stage { padding: calc((100vw - 2 * var(--stage-inset)) * 1.15 + 4.5rem) var(--space-5) var(--space-5); }
-    .hero--stage .hero__in { max-width: none; }
+    .hero--stage {
+      --portrait: calc((100vw - 2 * var(--stage-inset)) * 1.15);
+      min-height: 0;
+      padding: var(--space-6) var(--space-5) calc(var(--portrait) * 0.97 + var(--space-4));
+    }
+    .hero--stage .hero__in { max-width: none; gap: var(--space-4); }
+    .hero__lead { font-size: var(--text-md); }
+    .hero__zone { inset: auto 0 0 0; height: var(--portrait); }
   }
 </style>
 <script>
   // Портрет подгружаем, когда браузер свободен: текст и кнопки появляются сразу, эффект позже и отдельным файлом
   const stage = document.querySelector<HTMLElement>('[data-portrait]');
   if (stage) {
+    const zone = stage.querySelector<HTMLElement>('.hero__zone')!;
     const start = async () => {
       // @ts-ignore: у js-модуля нет типов
       const { DitherPortrait } = await import('../../lib/dither-portrait.js');
-      new DitherPortrait(stage, { src: '/dither-portrait.png', color: '#ffffff' });
+      new DitherPortrait(stage, { src: '/dither-portrait.png', color: '#ffffff', valign: 'bottom', scrollTarget: zone });
     };
-    'requestIdleCallback' in window ? requestIdleCallback(start, { timeout: 1500 }) : setTimeout(start, 300);
+    const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(start, { timeout: 1500 }) : setTimeout(start, 300));
+    if (matchMedia('(max-width: 52.5rem)').matches) {
+      // На телефоне портрет внизу: ждём, пока до него долистают, чтобы интро увидели и лишнее не грузилось
+      new IntersectionObserver((e, o) => { if (e[0].isIntersecting) { o.disconnect(); idle(); } }, { rootMargin: '0px 0px 150px 0px' }).observe(zone);
+    } else idle();
   }
 </script>

@@ -48,6 +48,7 @@ export class DitherPortrait {
    * @param {number}  [options.scale=1]      portrait size multiplier
    * @param {number}  [options.offsetX=0]    px shift
    * @param {number}  [options.offsetY=0]    px shift
+   * @param {'top'|'bottom'} [options.valign='top']  narrow layout only: portrait at the top or at the bottom of the container
    * @param {number}  [options.pixel=0]      dither pixel size in CSS px (0 = automatic)
    * @param {HTMLElement} [options.scrollTarget]  element whose scroll-through drives the dissolve (default: container)
    * @param {number}  [options.scrollRange=0.7]   dissolve completes after scrolling this fraction of scrollTarget's height
@@ -61,7 +62,7 @@ export class DitherPortrait {
     if (!container) throw new Error('DitherPortrait: container is required');
     if (!options.src) throw new Error('DitherPortrait: options.src (tone map URL) is required');
     this.o = Object.assign(
-      { color: '#ffffff', align: 'auto', scale: 1, offsetX: 0, offsetY: 0, pixel: 0, scrollTarget: null,
+      { color: '#ffffff', align: 'auto', valign: 'top', scale: 1, offsetX: 0, offsetY: 0, pixel: 0, scrollTarget: null,
         scrollRange: 0.7, autoScroll: true, intro: true, introDuration: 3, flashlight: true, onReady: null },
       options
     );
@@ -151,7 +152,7 @@ export class DitherPortrait {
     const align = o.align === 'auto' ? (wide ? 'right' : 'center') : o.align;
     this.S = S;
     this.OX = (align === 'right' ? W - S * 0.94 : align === 'left' ? -S * 0.06 : (W - S) / 2) + o.offsetX;
-    this.OY = (wide ? (H - S) / 2 + H * 0.05 : H * 0.08) + o.offsetY;
+    this.OY = (wide ? (H - S) / 2 + H * 0.05 : o.valign === 'bottom' ? H - S * 0.97 : H * 0.08) + o.offsetY;
     this.baseCell = o.pixel || Math.max(2, Math.round(S / 300));
     this._pDrawn = -1; // размер сменился: нужен перерисованный кадр
     this._sync();

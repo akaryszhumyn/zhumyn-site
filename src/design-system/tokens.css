@@ -37,8 +37,8 @@
   --text-sm: 0.9375rem;
   --text-md: 1.0625rem;
   --text-lg: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
-  --text-xl: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
-  --text-2xl: clamp(2.25rem, 1.6rem + 3vw, 4rem);
+  --text-xl: clamp(1.625rem, 1.25rem + 1.6vw, 2.5rem);
+  --text-2xl: clamp(1.75rem, 1rem + 3.6vw, 4rem);
   --leading-tight: 1.1;
   --leading-normal: 1.55;
   --weight-regular: 400;
@@ -56,8 +56,6 @@
   --space-8: clamp(4rem, 2.5rem + 5vw, 8rem);
 
   /* Сетка */
-  --container: 72rem;
-  --gutter: clamp(1.25rem, 0.5rem + 3vw, 3rem);
   --header-h: calc(4.25rem + 1px); /* строка шапки + рамка */
   --stage-inset: 40px; /* боковой отступ первого экрана */
 
